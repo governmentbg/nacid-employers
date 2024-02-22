@@ -1,0 +1,68 @@
+<footer>
+  <div id="footer-links">
+    <div class="container">
+
+      <div class="row justify-content-center scroll-up-row">
+        <div *ngIf="isBtnVisible"
+             class="btn scroll-up d-flex justify-content-center align-items-center"
+             style="background-color: #028ab5; color: #fff; border: solid"
+             (click)="scrollToTop()">
+          <app-icon icon="chevron-up"
+                    class="bi bi-chevron-up"
+                    style="color:#fff;"
+                    width="18"
+                    height="18"></app-icon>
+        </div>
+      </div>
+
+
+      <div class="row justify-content-center"
+           style="margin-bottom: 10px;">
+        <a href="https://nacid.bg/bg/"
+           target="_blank">
+          <img class=""
+               src="assets/nacid_logo.png" /> </a>
+      </div>
+
+      <div class="row justify-content-center">
+        <a href="https://nacid.bg/bg/"
+           target="_blank">
+          <h5>НАЦИД</h5>
+        </a>
+      </div>
+
+
+      <div class="row justify-content-center mt-3">
+        <div class="col-sm-12 flex-column"
+             style="font-size: 14px; text-align: center;">
+          <a href="assets/documents/PrivacyPolicy.pdf"
+             target="_blank">
+            Политика за поверителност
+          </a>
+          <span class="hide"> | </span>
+          <a [routerLink]="['/regulations']">
+            Нормативна уредба
+          </a>
+          <span class="hide"> | </span>
+          <a href="assets/documents/Draft contract 95a ZVO.doc"
+             target="_blank"
+             download="Draft contract 95a ZVO.doc">
+            Примерен договор
+          </a>
+          <span class="hide"> | </span>
+          <a href="https://nacid.bg/bg/contacts"
+             target="_blank">
+            Обратна връзка
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer-copyright"
+       class="row d-flex justify-content-center">
+    <div class="col-10"
+         style="text-align: center; font-size: 12px;">Информационна система работодатели и студенти.
+      ©{{ currentYear }}&nbsp;НАЦИД.&nbsp;Всички&nbsp;права&nbsp;запазени.</div>
+  </div>
+</footer>

@@ -1,0 +1,76 @@
+<div class="modal-header justify-content-center">
+  <h5>Изменение на договора</h5>
+</div>
+
+<div class="modal-body">
+  <form #resultForm="ngForm">
+    <div class="row">
+      <div class="form-group col-sm-12 col-md-4">
+        <label class="d-inline-flex align-items-center">
+          Дата
+        </label>
+        <div class="input-group input-group-sm">
+          <input name="modificationDate"
+                 class="form-control"
+                 ngbDatepicker
+                 [ngStyle]="{'border': modificationDate.status == 'INVALID' ? '1px solid #dc3545' : null}"
+                 #modificationDate="ngModel"
+                 #end="ngbDatepicker"
+                 placeholder="дд/мм/гггг"
+                 [(ngModel)]="model.modificationDate"
+                 validDate
+                 required>
+          <div class="input-group-append">
+            <button class="btn btn-sm btn-outline-primary"
+                    (click)="end.toggle()"
+                    type="button">
+              <app-icon icon="calendar2-event"
+                        width="12"
+                        height="12"></app-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group col-sm-12 col-md-8">
+        <label class="d-inline-flex">
+          Копие на анекса
+        </label>
+        <app-file-upload #annexFile="ngModel"
+                         name="annexFile"
+                         [(ngModel)]="model.annexFile"
+                         [required]="true"></app-file-upload>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-sm-12 col-md-12">
+        <label class="d-inline-flex">
+          Основание
+        </label>
+        <input type="text"
+               #reason="ngModel"
+               name="reason"
+               class="form-control form-control-sm"
+               [(ngModel)]="model.reason"
+               required
+               maxlength="600">
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="modal-footer">
+  <button type="button"
+          class="btn btn-sm btn-success"
+          (click)="save()"
+          [disabled]="!resultForm.form.valid">
+    Запиши
+  </button>
+
+  <button type="button"
+          class="btn btn-sm btn-danger"
+          (click)="modal.close()">
+    Затвори
+  </button>
+</div>

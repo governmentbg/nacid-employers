@@ -1,0 +1,274 @@
+<div class="row">
+  <div class="form-group col-sm-12"
+       style="font-weight: 600;">
+    СПИСЪК НА СПЕЦИАЛНОСТИТЕ С ОСИГУРЕНИ СРЕДСТВА ОТ БЮДЖЕТА ЗА
+    {{specialityList.schoolYear?.name}} ГОДИНА
+  </div>
+</div>
+
+<div class="row d-flex align-items-end">
+  <div class="form-group col-sm-12 col-md-2">
+    <label> {{ 'list.common.schoolYear' | translate }} </label>
+    <app-async-select #schoolYear="ngModel"
+                      name="schoolYear"
+                      restUrl="SchoolYear/Select"
+                      [(ngModel)]="specialityList.schoolYear"
+                      (ngModelChange)="loadList(specialityList.schoolYear.id)"></app-async-select>
+  </div>
+
+  <div *ngIf="specialityList.isPublished && specialityList.schoolYear.isCurrent"
+       class="form-group col-sm-12 col-md-3">
+    <button type="button"
+            class="btn btn-sm btn-primary"
+            (click)="createYear(specialityList.schoolYear.id)"
+            awaitable>
+      {{ 'list.speciality.createYearBtn' | translate }}
+    </button>
+  </div>
+</div>
+
+<app-speciality-list-search *ngIf="specialityList.isPublished"
+                            [schoolYearId]="specialityList.schoolYear?.id"
+                            (searchEvent)="searchEventHandler($event)"></app-speciality-list-search>
+
+<div class="search-panel mb-5"
+     *ngIf="!specialityList.isPublished">
+  <ng-form #specialityForm="ngForm"
+           name='specialityForm'>
+    <div class="row">
+      <div class="form-group col-sm-12 col-md-6">
+        <label> {{ 'list.speciality.researchArea' | translate }} </label>
+        <app-async-select #researchArea="ngModel"
+                          name="researchArea"
+                          restUrl="ResearchArea/Select"
+                          (ngModelChange)="onResearchAreaChange()"
+                          [(ngModel)]="model.researchArea"
+                          [required]="true"></app-async-select>
+      </div>
+
+      <div class="form-group col-sm-12 col-md-6">
+        <label> {{ 'list.speciality.institution' | translate }} </label>
+        <app-async-select #institution="ngModel"
+                          name="institution"
+                          restUrl="Institution/University"
+                          [(ngModel)]="model.institution"
+                          (ngModelChange)="onInstitutionChange()"
+                          [filter]="{entityId: model.researchArea?.id}"
+                          [disabled]="!model.researchArea?.id"
+                          [required]="true"></app-async-select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-sm-12 col-md-3">
+        <label> {{ 'list.speciality.qualification' | translate }} </label>
+
+        <app-async-select #educationalQualification="ngModel"
+                          name="educationalQualification"
+                          restUrl="EducationalQualification/Select"
+                          [(ngModel)]="model.educationalQualification"
+                          (ngModelChange)="onQualificationChange()"
+                          [disabled]="!model.institution?.id"
+                          [required]="true"></app-async-select>
+      </div>
+
+      <div class="form-group col-sm-12 col-md-3">
+        <label class="d-inline-flex">
+          {{ 'list.speciality.form' | translate }}
+        </label>
+
+        <app-async-select #educationFormType="ngModel"
+                          name="educationFormType"
+                          restUrl="EducationFormType/Select"
+                          [(ngModel)]="model.educationFormType"
+                          (ngModelChange)="onFormChange()"
+                          [disabled]="!model.educationalQualification?.id"
+                          [required]="true"></app-async-select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-sm-12 col-md-10">
+        <label>
+          {{ 'list.common.speciality' | translate }}
+        </label>
+
+        <app-async-select #speciality="ngModel"
+                          name="speciality"
+                          restUrl="Speciality/InstitutionSpecialities"
+                          [(ngModel)]="model.speciality"
+                          (ngModelChange)="onSpecialityChange()"
+                          [filter]="{
+                            entityId: model.institution?.id, 
+                            researchAreaId: model.researchArea?.id, 
+                            educationalQualificationId: model.educationalQualification?.id,
+                            educationFormId: model.educationFormType?.id}"
+                          [disabled]="!model.institution?.id || !model.researchArea?.id || !model.educationalQualification?.id || !model.educationFormType?.id"
+                          [required]="true">
+          <ng-template #dropdownItemTemplate
+                       let-item>
+            {{ item.name }}
+          </ng-template>
+        </app-async-select>
+      </div>
+
+      <div class="form-group col-sm-12 col-md-2">
+        <label class="d-inline-flex">
+          {{ 'list.common.studentsCount' | translate }}
+        </label>
+
+        <input #studentsCount="ngModel"
+               type="number"
+               name="studentsCount"
+               class="form-control form-control-sm"
+               [(ngModel)]="model.studentsCount"
+               [disabled]="!model.speciality?.id"
+               required
+               min="1"
+               max="99">
+      </div>
+    </div>
+
+    <div *ngFor="let minister of model.specialityMinisters; let i = index; trackBy: sharedService.trackByFn"
+         class="row align-items-end">
+      <div class="form-group col-sm-12 col-md-6">
+        <label class="d-inline-flex">
+          {{ 'list.speciality.minister' | translate }}
+        </label>
+        <app-async-select #minister="ngModel"
+                          name="minister--{{i}}"
+                          restUrl="Minister/Select"
+                          [(ngModel)]="model.specialityMinisters[i].minister"
+                          [required]="true"
+                          [disabled]="!model.speciality?.id">
+        </app-async-select>
+      </div>
+
+      <div class="form-group col-sm-12 col-md-6">
+        <button *ngIf="model.specialityMinisters.length > 1"
+                type="button"
+                class="btn btn-sm btn-secondary ml-3"
+                (click)="removeMinister(i)">
+          <app-icon icon="trash"></app-icon>
+          Премахни
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="model.speciality?.id"
+         class="row">
+      <div class="col-sm-12 col-md-3 mb-2">
+        <button type="button"
+                class="btn btn-sm btn-primary"
+                style="display: flex; align-items: center; justify-content: center; width: 100%;"
+                (click)="addMinister()">
+          <app-icon icon="plus-circle"
+                    class="thicker-icon mr-1"></app-icon>
+          Добави министър
+        </button>
+      </div>
+    </div>
+
+    <div class="row d-flex flex-row-reverse mt-4">
+      <div class="form-group col-sm-12 col-md-2">
+        <button type="button"
+                class="btn btn-sm btn-primary"
+                style="width: 100%;"
+                (click)="addSpeciality()"
+                [disabled]="specialityForm.invalid"
+                awaitable>
+          {{ 'list.common.addToListBtn' | translate }}
+        </button>
+      </div>
+    </div>
+  </ng-form>
+</div>
+
+<div class="ml-2"
+     *ngIf="!specialityList.items?.length"
+     style="margin-bottom: 0px;">
+  {{ 'list.common.emptyListMsg' | translate }}
+</div>
+
+<div class="row mt-2 mb-4"
+     *ngIf="specialityList.items?.length">
+
+  <div class="col-sm-12 col-md-6"
+       style="margin-bottom: 0px">
+    {{ (specialityList.isPublished ?
+    'list.speciality.foundSpecialityItemCount' : 'list.speciality.specialityItemCount') | translate }}
+    <b>{{ specialityList.items?.length }}</b>
+  </div>
+
+  <div class="col-sm-12 col-md-6">
+    <div class="float-md-right d-flex">
+      <button *ngIf="specialityList.isPublished"
+              type="button"
+              class="btn btn-sm btn-danger ml-3"
+              (click)="changeIsPublishedStatus(false)"
+              awaitable>
+        {{ 'list.common.stopPublication' | translate }}
+      </button>
+
+      <button *ngIf="!specialityList.isPublished"
+              type="button"
+              class="btn btn-sm btn-success ml-3"
+              (click)="changeIsPublishedStatus(true)"
+              awaitable>
+        {{ 'list.common.beginPublication' | translate }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<table class="table search-table table-bordered"
+       *ngIf="specialityList.items?.length > 0">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col"
+          style="width: 20%;"> {{ 'list.speciality.researchAreaShort' | translate }} </th>
+      <th scope="col"
+          style="width: 20%;"> {{ 'list.speciality.institution' | translate }} </th>
+      <th scope="col"
+          style="width: 35%;"> {{ 'list.common.speciality' | translate }} </th>
+      <th scope="col"> {{ 'list.common.countShort' | translate }} </th>
+      <th scope="col"> {{ 'list.speciality.ministerShort' | translate }} </th>
+      <th scope="col"> {{ 'list.common.actions' | translate }} </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let speciality of specialityList.items, let i = index">
+      <td>{{ speciality.researchArea.name }}</td>
+      <td>{{ speciality.institution.name }}</td>
+      <td>{{ speciality.speciality.name }}
+        <div>
+          {{ speciality.educationalQualification.name }}, {{ speciality.educationFormType.name }}
+        </div>
+      </td>
+      <td> <span class="d-flex justify-content-end">{{ speciality.studentsCount }}</span> </td>
+      <td>
+        <div *ngFor="let specialityMinister of speciality.specialityMinisters">
+          {{ specialityMinister.minister?.name }}
+        </div>
+      </td>
+      <td class="preview"
+          style="text-align: center; padding: 0;">
+        <a class="btn btn-sm btn-outline-primary mr-1"
+           title="{{ 'buttons.tooltips.edit' | translate }}"
+           (click)="editSpeciality(speciality, i)">
+          <app-icon icon="pencil"
+                    width="14"
+                    height="14"></app-icon>
+        </a>
+        <a *ngIf="!specialityList.isPublished"
+           class="btn btn-sm btn-outline-danger"
+           title="{{ 'buttons.tooltips.remove' | translate }}"
+           (click)="removeSpeciality(speciality)">
+          <app-icon icon="trash"
+                    width="14"
+                    height="14"></app-icon>
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>

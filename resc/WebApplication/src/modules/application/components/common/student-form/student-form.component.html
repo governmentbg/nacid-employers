@@ -1,0 +1,107 @@
+<ng-form>
+	<div class="row">
+		<div class="form-group col-sm-12 col-md-4">
+			<label class="d-inline-flex">
+				{{ 'application.new.student.firstName' | translate }}
+			</label>
+			<input type="text"
+						 #firstName="ngModel"
+						 name="firstName"
+						 class="form-control form-control-sm"
+						 [(ngModel)]="model.firstName"
+						 [disabled]="!isEditMode"
+						 [pattern]="cyrillicRegExp"
+						 autocomplete="off"
+						 required
+						 minlength="3"
+						 maxlength="20">
+		</div>
+
+		<div class="form-group col-sm-12 col-md-4">
+			<label class="d-inline-flex">
+				{{ 'application.new.student.lastName' | translate }}
+			</label>
+			<input type="text"
+						 #lastName="ngModel"
+						 name="lastName"
+						 class="form-control form-control-sm"
+						 [(ngModel)]="model.lastName"
+						 [disabled]="!isEditMode"
+						 [pattern]="cyrillicRegExp"
+						 autocomplete="off"
+						 required
+						 minlength="3"
+						 maxlength="20">
+		</div>
+
+		<div class="form-group col-sm-12 col-md-4">
+			<label class="d-inline-flex">
+				{{ 'application.new.student.middleName' | translate }}
+			</label>
+			<input type="text"
+						 #middleName="ngModel"
+						 name="middleName"
+						 class="form-control form-control-sm"
+						 [(ngModel)]="model.middleName"
+						 [pattern]="cyrillicRegExp"
+						 [disabled]="!isEditMode"
+						 autocomplete="off"
+						 minlength="3"
+						 maxlength="40">
+		</div>
+
+
+	</div>
+
+	<div class="row">
+		<div class="form-group col-sm-12 col-md-4">
+			<label class="d-inline-flex">
+				{{ 'application.new.student.uin' | translate }}
+			</label>
+			<input type="text"
+						 #uin="ngModel"
+						 name="uin"
+						 class="form-control form-control-sm"
+						 [(ngModel)]="model.uin"
+						 [disabled]="!isEditMode || isApplicationEntered"
+						 [pattern]="uinRegExp"
+						 autocomplete="off"
+						 required
+						 minlength="8"
+						 maxlength="15">
+		</div>
+
+		<div class="form-group col-sm-12 col-md-4">
+			<label class="d-inline-flex">
+				{{ 'application.new.common.email' | translate }}
+			</label>
+			<input type="text"
+						 #email="ngModel"
+						 name="email"
+						 class="form-control form-control-sm"
+						 [(ngModel)]="model.email"
+						 (keypress)="sharedService.filterMail($event)"
+						 [pattern]="mailRegex"
+						 [disabled]="!isEditMode"
+						 autocomplete="off"
+						 maxlength="40">
+		</div>
+
+		<div class="form-group col-sm-12 col-md-2">
+			<label class="d-inline-flex">
+				{{ 'application.new.common.phoneNumber' | translate }}
+			</label>
+			<input type="text"
+						 #phoneNumber="ngModel"
+						 name="phoneNumber"
+						 class="form-control form-control-sm"
+						 [(ngModel)]="model.phoneNumber"
+						 (keypress)="sharedService.filterPhone($event, model.phoneNumber)"
+						 [pattern]="phoneRegExp"
+						 [disabled]="!isEditMode"
+						 autocomplete="off"
+						 minlength="9"
+						 maxlength="17">
+		</div>
+	</div>
+</ng-form>

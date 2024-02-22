@@ -1,0 +1,24 @@
+.search-btn {
+  background-color: #ff9800; 
+  color: white; 
+  padding: 7px 15px 5px 15px; 
+  height: 40px; 
+  border-radius: 10px;
+}
+
+@media screen and (max-width: 992px) {
+  .float-right {
+    float: right;
+  }
+}
+
+@media screen and (max-width: 992px) and (min-width: 768px) {
+  .padding-zero {
+    padding: 0;
+  }
+  .search-btn {
+    padding: 0 5px 0 5px;
+    justify-content: center;
+    align-items: center;
+  }
+}

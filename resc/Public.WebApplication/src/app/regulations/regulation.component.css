@@ -1,0 +1,14 @@
+.document-box {
+  margin-bottom: 16px;
+  padding: 8px;
+  background-color: whitesmoke;
+}
+
+.primary {
+  color: #135496;
+  text-decoration: none;
+}
+
+.primary > span:hover {
+  color: #ff9800;
+}

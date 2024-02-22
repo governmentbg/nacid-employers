@@ -1,0 +1,69 @@
+<div class="card">
+	<div class="card-header"
+			 style="display: flex; align-items: center; justify-content: space-between; font-weight: bold; text-transform: uppercase;">
+		{{ header }}
+		<div>
+			<ng-container
+										*ngIf="(commitState === commitStates.modification && isUniversityUser) || (commitState === commitStates.enteredModification && canEdit)">
+				<ng-container *ngIf="model?.state === partStates.unchanged">
+					<button class="btn btn-sm btn-primary"
+									(click)="startModification()">
+						{{ 'buttons.startModification' | translate }}
+					</button>
+				</ng-container>
+
+				<ng-container *ngIf="model?.state === partStates.modified">
+					<ng-container *ngIf="!isEditMode">
+						<button *ngIf="!isEditMode"
+										class="btn btn-sm btn-primary"
+										(click)="edit()">
+							{{ 'buttons.edit' | translate }}
+						</button>
+
+						<button class="btn btn-sm btn-danger ml-3"
+										(click)="cancelModification()">
+							{{ 'buttons.cancelModification' | translate }}
+						</button>
+					</ng-container>
+
+					<ng-container *ngIf="isEditMode">
+						<button class="btn btn-sm btn-success"
+										(click)="update()"
+										[disabled]="!hasValidData">
+							Запиши промените
+						</button>
+
+						<button class="btn btn-sm btn-danger ml-3"
+										(click)="cancelEdit()">
+							{{ 'buttons.cancel' | translate }}
+						</button>
+					</ng-container>
+				</ng-container>
+			</ng-container>
+
+			<!-- <ng-container *ngIf="commitState === commitStates.initialDraft">
+				<button *ngIf="!isEditMode"
+								class="btn btn-sm btn-primary"
+								(click)="edit()">
+					{{ 'buttons.edit' | translate }}
+				</button>
+
+				<ng-container *ngIf="isEditMode">
+					<button class="btn btn-sm btn-success"
+									(click)="update()"
+									[disabled]="!hasValidData">
+						{{ 'buttons.save' | translate }}
+					</button>
+
+					<button class="btn btn-sm btn-danger ml-2"
+									(click)="cancelEdit()">
+						{{ 'buttons.cancel' | translate }}
+					</button>
+				</ng-container>
+			</ng-container> -->
+		</div>
+	</div>
+	<div class="card-body">
+		<ng-content></ng-content>
+	</div>
+</div>

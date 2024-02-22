@@ -1,0 +1,74 @@
+<div class="search-panel mb-5">
+
+  <div class="row">
+    <div class="form-group col-sm-12 col-md-12">
+      <label>{{ 'list.common.speciality' | translate }}</label>
+      <app-async-select #speciality="ngModel"
+                        name="speciality"
+                        restUrl="SpecialityList/Select"
+                        [(ngModel)]="filter.speciality"
+                        [filter]="{schoolYearId: schoolYearId}"
+                        (ngModelChange)="filter.specialityId = $event.id; filter.specialityName = $event.name">
+      </app-async-select>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group col-sm-12 col-md-6">
+      <label>{{ 'list.speciality.researchArea' | translate }}</label>
+      <app-async-select #researchArea="ngModel"
+                        name="researchArea"
+                        restUrl="SpecialityList/selectResearchArea"
+                        [(ngModel)]="filter.researchArea"
+                        [filter]="{entityId: schoolYearId}"
+                        (ngModelChange)="filter.researchAreaId = $event.id"></app-async-select>
+    </div>
+
+    <div class="form-group col-sm-12 col-md-6">
+      <label>{{ 'list.speciality.institution' | translate }}</label>
+      <app-async-select #institution="ngModel"
+                        name="institution"
+                        restUrl="SpecialityList/selectUniversity"
+                        [(ngModel)]="filter.institution"
+                        [filter]="{entityId: schoolYearId}"
+                        (ngModelChange)="filter.institutionId = $event.id"></app-async-select>
+    </div>
+  </div>
+
+  <div class="row mt-4 mb-2">
+    <div class="col-sm-12">
+      <div class="float-md-left">
+        <div class="btn-group">
+          <button type="button"
+                  class="btn btn-sm btn-secondary d-flex align-items-center"
+                  awaitable
+                  [click]="clearFilter"
+                  [clickContext]="this"
+                  [disabled]="false">
+            <app-icon class="mr-1"
+                      icon="trash"
+                      width="13"
+                      height="13"></app-icon>
+            {{ 'buttons.clear' | translate }}
+          </button>
+        </div>
+      </div>
+
+      <div class="btn-group float-md-right">
+        <button type="button"
+                class="btn btn-sm btn-primary ml-3"
+                awaitable
+                [click]="search"
+                [clickParams]="[false]"
+                [clickContext]="this"
+                [disabled]="false">
+          <app-icon icon="search"
+                    class="thicker-icon"
+                    width="12"
+                    height="12"></app-icon>
+          {{ 'buttons.search' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

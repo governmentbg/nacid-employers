@@ -1,0 +1,235 @@
+<div class="row">
+  <div class="form-group col-sm-12"
+       style="font-weight: 600;">
+    СПИСЪК НА РАБОТОДАТЕЛИТЕ ПО РЕДА НА ЧЛ. 95А, АЛ. 1 ОТ ЗВО ЗА {{employerList.schoolYear?.name}} ГОДИНА
+  </div>
+</div>
+
+<div class="row d-flex align-items-end">
+  <div class="form-group col-sm-12 col-md-2">
+    <label>{{ 'list.common.schoolYear' | translate }}</label>
+    <app-async-select #schoolYear="ngModel"
+                      name="schoolYear"
+                      restUrl="SchoolYear/Select"
+                      [(ngModel)]="employerList.schoolYear"
+                      (ngModelChange)="loadList(employerList.schoolYear.id)"></app-async-select>
+  </div>
+</div>
+
+<div class="search-panel mb-5"
+     *ngIf="!employerList.isPublished">
+  <ng-form #employerForm="ngForm"
+           name='employerForm'>
+    <div class="row">
+      <div class="form-group col-sm-12 col-md-2">
+        <label class="d-inline-flex"> {{ 'list.employer.bulstat' | translate }} </label>
+        <input #bulstat="ngModel"
+               type="text"
+               pattern="\d*"
+               name="bulstat"
+               class="form-control form-control-sm"
+               [(ngModel)]="model.bulstat"
+               (keypress)="sharedService.onlyNumbers($event)"
+               required
+               minlength="9"
+               maxlength="13">
+      </div>
+
+      <div class="form-group col-sm-12 col-md-10">
+        <label class="d-inline-flex"> {{ 'list.employer.label' | translate }} </label>
+        <input #companyName="ngModel"
+               type="text"
+               name="companyName"
+               class="form-control form-control-sm"
+               [(ngModel)]="model.name"
+               required
+               minlength="5"
+               maxlength="80">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-sm-12 col-md-3">
+        <label class="d-inline-flex"> {{ 'list.employer.city' | translate }} </label>
+        <app-async-select #city="ngModel"
+                          name="city"
+                          restUrl="City/Select"
+                          [(ngModel)]="model.city"
+                          [required]="true"></app-async-select>
+      </div>
+
+      <div class="form-group col-sm-12 col-md-9">
+        <label class="d-inline-flex"> {{ 'list.employer.address' | translate }} </label>
+        <input #address="ngModel"
+               type="text"
+               name="address"
+               class="form-control form-control-sm"
+               [(ngModel)]="model.address"
+               required
+               minlength="5"
+               maxlength="100">
+      </div>
+    </div>
+
+    <div class="row"
+         *ngFor="let speciality of model.specialities, let i = index, trackBy:trackByFn">
+      <div class="form-group col-sm-12 col-md-9">
+        <label class="d-inline-flex"> {{ 'list.common.speciality' | translate }} </label>
+
+        <app-async-select #speciality="ngModel"
+                          name="speciality--{{i}}"
+                          restUrl="SpecialityList/Select"
+                          [(ngModel)]="model.specialities[i].speciality"
+                          [filter]="{schoolYearId: employerList.schoolYear?.id}"
+                          (ngModelChange)="model.specialities[i].speciality.id = $event.speciality.id"
+                          [required]="true">
+          <ng-template #dropdownItemTemplate
+                       let-item>
+            {{ item.name }}
+          </ng-template>
+        </app-async-select>
+      </div>
+
+      <div class="form-group col-sm-12"
+           [ngClass]="model.specialities.length > 1 ? 'col-md-2' : 'col-md-3'">
+        <label class="d-inline-flex"> {{ 'list.common.studentsCount' | translate }} </label>
+
+        <input #studentsCount="ngModel"
+               type="number"
+               name="studentsCount--{{i}}"
+               class="form-control form-control-sm"
+               [(ngModel)]="model.specialities[i].studentsCount"
+               required
+               min="1"
+               max="99"
+               oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+               maxlength="2">
+      </div>
+
+      <div class="form-group col-sm-12 col-md-1">
+        <div class="float-md-right">
+          <label class="d-inline-flex">
+          </label>
+          <button *ngIf="model.specialities.length > 1"
+                  type="button"
+                  class="btn btn-sm btn-secondary"
+                  style="display: flex; align-items: center; justify-content: center"
+                  (click)="removeSpeciality(i)">
+            <app-icon icon="trash"></app-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-2 mb-2">
+      <div class="col-sm-12">
+        <div class="float-md-left d-flex">
+          <div class="btn-group">
+            <button type="button"
+                    class="btn btn-sm btn-primary"
+                    (click)="addSpeciality()"
+                    awaitable>
+              {{ 'list.employer.addSpecialityBtn' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row d-flex flex-row-reverse">
+      <div class="form-group col-sm-12 col-md-2">
+        <button type="button"
+                class="btn btn-sm btn-primary"
+                style="width: 100%;"
+                (click)="addEmployer()"
+                [disabled]="employerForm.invalid"
+                awaitable>
+          {{ 'list.common.addToListBtn' | translate }}
+        </button>
+      </div>
+    </div>
+  </ng-form>
+</div>
+
+<app-employer-list-search *ngIf="employerList.isPublished"
+                          [schoolYearId]="employerList.schoolYear?.id"
+                          (searchEvent)="searchEventHandler($event)"></app-employer-list-search>
+
+<p class="ml-2"
+   *ngIf="employerList.items?.length == 0"
+   style="margin-bottom: 0px;">{{ 'list.common.emptyListMsg' | translate }}</p>
+
+<div class="row mt-2 mb-4"
+     *ngIf="employerList.items?.length > 0">
+
+  <div class="col-sm-12 col-md-6"
+       style="margin-bottom: 0px"> {{ 'list.employer.employerItemCount' | translate }} <b>{{ employerList.items?.length
+      }}</b></div>
+
+  <div class="col-sm-12 col-md-6">
+    <div class="float-md-right d-flex">
+      <button *ngIf="employerList.isPublished"
+              type="button"
+              class="btn btn-sm btn-danger ml-3"
+              (click)="changeIsPublishedStatus(false)"
+              awaitable>
+        {{ 'list.common.stopPublication' | translate }}
+      </button>
+
+      <button *ngIf="!employerList.isPublished"
+              type="button"
+              class="btn btn-sm btn-success ml-3"
+              (click)="changeIsPublishedStatus(true)"
+              awaitable>
+        {{ 'list.common.beginPublication' | translate }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<table class="table search-table table-bordered"
+       *ngIf="employerList.items?.length > 0">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col"
+          style="width: 11%;"> {{ 'list.employer.bulstat' | translate }} </th>
+      <th scope="col"
+          style="width: 20%;"> {{ 'list.employer.label' | translate }} </th>
+      <th scope="col"
+          style="width: 20%;"> {{ 'list.employer.address' | translate }} </th>
+      <th scope="col"
+          style="width: 34%;"> Специалност (брой обучаеми) </th>
+      <th scope="col"> {{ 'list.common.actions' | translate }} </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let employer of employerList.items, let i = index">
+      <td>{{ employer.bulstat }}</td>
+      <td>{{ employer.name }}</td>
+      <td>{{employer.city.name}},
+        <div>{{ employer.address }}</div>
+      </td>
+      <td><span style="display: block;"
+              *ngFor="let speciality of employer.specialities">{{ speciality.speciality.name }}&nbsp;({{
+          speciality.studentsCount }})</span></td>
+      <td class="preview"
+          style="text-align: center; padding: 0;">
+        <a class="btn btn-sm btn-outline-primary mr-1"
+           title="{{ 'buttons.tooltips.edit' | translate }}"
+           (click)="editEmployer(employer, i)">
+          <app-icon icon="pencil"
+                    width="14"
+                    height="14"></app-icon>
+        </a>
+        <a *ngIf="!employerList.isPublished"
+           class="btn btn-sm btn-outline-danger"
+           title="{{ 'buttons.tooltips.remove' | translate }}"
+           (click)="removeEmployer(employer)">
+          <app-icon icon="trash"
+                    width="14"
+                    height="14"></app-icon>
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>

@@ -1,0 +1,138 @@
+/* You can add global styles to this file, and also import other style files */
+* {
+  box-sizing: border-box;
+  border: none;
+  outline: none;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+
+:root {
+  --resc-primary-color: #005671;
+}
+
+body {
+  position: relative;
+	font-family: Roboto, sans-serif;
+  font-weight: 400;
+  margin: 0;
+  padding: 0;
+  line-height: 1.4em;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-touch-callout: none;
+  background-color: #ffffff;
+  overflow-x: clip;
+}
+
+textarea:focus,
+textarea.form-control:focus,
+input.form-control:focus,
+input[type=text]:focus,
+input[type=password]:focus,
+input[type=email]:focus,
+input[type=number]:focus,
+[type=text].form-control:focus,
+[type=password].form-control:focus,
+[type=email].form-control:focus,
+[type=tel].form-control:focus,
+[contenteditable].form-control:focus {
+  box-shadow: none;
+}
+
+.form-control:invalid {
+  border: 1px solid #dc3545;
+  box-shadow: none;
+}
+
+thead > tr > th {
+  font-size: 16px;
+  color: white !important;
+  background-color: #005671 !important;
+  font-weight: 500;
+}
+
+.form-group > label {
+  font-weight: 400;
+  font-size: 16px !important;
+  margin-bottom: 0.2em !important; 
+}
+
+.thicker-icon > svg.bi {
+  stroke: #ffffff;
+}
+
+.btn {
+  font-weight: 600;
+}
+
+.btn-primary,
+.btn-outline-primary:hover,
+.btn-outline-primary:active,
+.show>.btn-outline-primary.dropdown-toggle {
+  background-color: var(--resc-primary-color) !important;
+  border-color: var(--resc-primary-color) !important;
+  color: #ffffff !important;
+}
+
+.btn-outline-primary {
+  color:   var(--resc-primary-color) !important;
+  border-color:  var(--resc-primary-color) !important;
+}
+
+.multi-container {
+  border-bottom: 1px solid rgba(0,0,0,.1);
+  padding-bottom: .5em;
+  margin-bottom: .5em;
+}
+
+.required-field label:after {
+  content:"*";
+  color:red;
+}
+
+.search-table {
+  font-size: 16px;
+}
+
+.search-table thead {
+  line-height: .75em;
+}
+
+.search-table td.preview {
+  vertical-align: middle;
+  padding: 0 .75em;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.search-panel {
+	padding: 2em 2em 1em 2em;
+  box-shadow: 0px 8px 20px 0px rgba(0, 0, 0, 0.15);
+  color: white;
+  background-color: #005671;
+}
+
+.custom-select:disabled {
+  color: black !important;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+#no-items {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #005671;
+}

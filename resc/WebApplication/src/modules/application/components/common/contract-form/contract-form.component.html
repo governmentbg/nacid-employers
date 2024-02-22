@@ -1,0 +1,244 @@
+<ng-form>
+  <div class="row">
+    <div class="form-group col-sm-12 col-md-2">
+      <label class="d-inline-flex">
+        {{ 'application.new.contract.number' | translate }}
+      </label>
+      <input type="text"
+             #number="ngModel"
+             name="number"
+             autocomplete="off"
+             class="form-control form-control-sm"
+             [(ngModel)]="model.number"
+             [disabled]="!isEditMode || isApplicationEntered"
+             maxlength="12">
+    </div>
+
+    <div class="form-group col-sm-12 col-md-2">
+      <label class="d-inline-flex align-items-center">
+        {{ 'application.new.contract.signingDate' | translate }}
+      </label>
+      <div class="input-group input-group-sm">
+        <input name="signingDate"
+               class="form-control"
+               ngbDatepicker
+               [ngStyle]="{'border': signingDate.status == 'INVALID' ? '1px solid #dc3545' : null}"
+               #signingDate="ngModel"
+               #datepicker="ngbDatepicker"
+               placeholder="дд/мм/гггг"
+               [(ngModel)]="model.signingDate"
+               (ngModelChange)="endContractDate()"
+               [disabled]="!isEditMode || isApplicationEntered"
+               validDate
+               required>
+        <div class="input-group-append">
+          <button class="btn btn-sm btn-outline-primary"
+                  (click)="datepicker.toggle()"
+                  [disabled]="!isEditMode"
+                  type="button">
+            <app-icon icon="calendar2-event"
+                      width="12"
+                      height="12"></app-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group col-sm-12 col-md-2">
+      <label class="d-inline-flex">
+        {{ 'application.new.contract.term' | translate }}
+      </label>
+      <input type="number"
+             #term="ngModel"
+             name="term"
+             class="form-control form-control-sm"
+             [(ngModel)]="model.term"
+             (ngModelChange)="endContractDate()"
+             [disabled]="!isEditMode || isApplicationEntered"
+             required
+             min="1"
+             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+             maxlength="2">
+    </div>
+
+    <div class="form-group col-sm-12 col-md-2">
+      <label class="d-inline-flex align-items-center">
+        {{ 'application.new.contract.endDate' | translate }}
+      </label>
+      <div class="input-group input-group-sm">
+        <input name="endDate"
+               class="form-control"
+               ngbDatepicker
+               [ngStyle]="{'border': endDate.status == 'INVALID' ? '1px solid #dc3545' : null}"
+               #endDate="ngModel"
+               #end="ngbDatepicker"
+               placeholder="дд/мм/гггг"
+               [(ngModel)]="model.endDate"
+               [disabled]="true"
+               validDate
+               required>
+        <div class="input-group-append">
+          <button class="btn btn-sm btn-outline-primary"
+                  (click)="end.toggle()"
+                  [disabled]="!isEditMode"
+                  type="button">
+            <app-icon icon="calendar2-event"
+                      width="12"
+                      height="12"></app-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group col-sm-12 col-md-4">
+      <label class="d-inline-flex align-items-center">
+        {{ 'application.new.contract.employmentTerm' | translate }}
+        <app-help-tooltip class="ml-1"
+                          tooltipText="Срок в месеци, през който служителят следва да работи при работодателя след успешното завършване на обучението си.">
+        </app-help-tooltip>
+      </label>
+      <input type="text"
+             #employmentTerm="ngModel"
+             name="employmentTerm"
+             class="form-control form-control-sm"
+             [(ngModel)]="model.employmentTerm"
+             [disabled]="!isEditMode || isApplicationEntered"
+             required
+             autocomplete="off"
+             min="1"
+             oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+             maxlength="2">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group col-sm-12 col-md-4">
+      <label class="d-inline-flex">
+        {{ 'application.new.contract.taxType.name' | translate }}
+      </label>
+      <select class="custom-select custom-select-sm"
+              #taxType="ngModel"
+              name="taxType"
+              [(ngModel)]="model.taxType"
+              [ngStyle]="{'border': model.taxType == null && taxType.disabled == false ? '1px solid #dc3545' : null}"
+              [disabled]="true"
+              required>
+        <option [ngValue]="taxTypes.full">
+          {{ 'application.new.contract.taxType.full' | translate }}
+        </option>
+        <option [ngValue]="taxTypes.partially">
+          {{ 'application.new.contract.taxType.partially' | translate }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group col-sm-12 col-md-8">
+      <label class="d-inline-flex">
+        {{ 'application.new.contract.attachedFile' | translate }}
+      </label>
+      <app-file-upload #attachedFile="ngModel"
+                       name="attachedFile"
+                       [(ngModel)]="model.attachedFile"
+                       [disabled]="!isEditMode"
+                       [required]="isEditMode"></app-file-upload>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="form-group col-sm-12 col-md-6">
+      <label class="d-inline-flex">
+        {{ (model.contacts[0].type === type.institution ? 'application.new.contract.institutionContactName' :
+        'application.new.contract.employerContactName') | translate }}
+      </label>
+      <input type="text"
+             #name="ngModel"
+             name="institutionContactName"
+             class="form-control form-control-sm"
+             [(ngModel)]="model.contacts[0].name"
+             [disabled]="!isEditMode"
+             [pattern]="cyrillicRegExp"
+             minlength="3"
+             maxlength="40">
+    </div>
+
+    <div class="form-group col-sm-12 col-md-3">
+      <label class="d-inline-flex">
+        {{ 'application.new.common.email' | translate }}
+      </label>
+      <input type="text"
+             #email="ngModel"
+             name="institutionContactEmail"
+             class="form-control form-control-sm"
+             [(ngModel)]="model.contacts[0].email"
+             (keypress)="sharedService.filterMail($event)"
+             [pattern]="mailRegex"
+             [disabled]="!isEditMode"
+             maxlength="40">
+    </div>
+
+    <div class="form-group col-sm-12 col-md-3">
+      <label class="d-inline-flex">
+        {{ 'application.new.common.phoneNumber' | translate }}
+      </label>
+      <input type="text"
+             #phoneNumber="ngModel"
+             name="institutionContactPhoneNumber"
+             class="form-control form-control-sm"
+             [(ngModel)]="model.contacts[0].phoneNumber"
+             (keypress)="sharedService.filterPhone($event, model.contacts[0].phoneNumber)"
+             [pattern]="phoneRegExp"
+             [disabled]="!isEditMode"
+             minlength="9"
+             maxlength="17">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group col-sm-12 col-md-6">
+      <label class="d-inline-flex">
+        {{ (model.contacts[1].type === type.institution ? 'application.new.contract.institutionContactName' :
+        'application.new.contract.employerContactName') | translate }}
+      </label>
+      <input type="text"
+             #name="ngModel"
+             name="employerContactName"
+             class="form-control form-control-sm"
+             [(ngModel)]="model.contacts[1].name"
+             [disabled]="!isEditMode"
+             [pattern]="cyrillicRegExp"
+             minlength="3"
+             maxlength="40">
+    </div>
+
+    <div class="form-group col-sm-12 col-md-3">
+      <label class="d-inline-flex">
+        {{ 'application.new.common.email' | translate }}
+      </label>
+      <input type="text"
+             #email="ngModel"
+             name="employerContactEmail"
+             class="form-control form-control-sm"
+             [(ngModel)]="model.contacts[1].email"
+             (keypress)="sharedService.filterMail($event)"
+             [pattern]="mailRegex"
+             [disabled]="!isEditMode"
+             maxlength="40">
+    </div>
+
+    <div class="form-group col-sm-12 col-md-3">
+      <label class="d-inline-flex">
+        {{ 'application.new.common.phoneNumber' | translate }}
+      </label>
+      <input type="text"
+             #phoneNumber="ngModel"
+             name="employerContactPhoneNumber"
+             class="form-control form-control-sm"
+             [(ngModel)]="model.contacts[1].phoneNumber"
+             (keypress)="sharedService.filterPhone($event, model.contacts[1].phoneNumber)"
+             [pattern]="phoneRegExp"
+             [disabled]="!isEditMode"
+             minlength="9"
+             maxlength="17">
+    </div>
+  </div>
+</ng-form>

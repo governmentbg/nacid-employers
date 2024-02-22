@@ -1,0 +1,87 @@
+<div class="d-flex mt-3">
+  <div style="margin-left: auto;">
+    <button class="btn btn-sm btn-primary mr-3"
+            type="button"
+            placement="top"
+            triggers="pointerenter:pointerout"
+            tooltipClass="my-tooltip-class"
+            [disableTooltip]="model.university.specialityListItem?.id"
+            ngbTooltip="Попълнете полето специалност преди да запишете в чернова"
+            style="display: inline-flex; align-items: center;"
+            (click)="saveDraft()"
+            [disabled]="!model.university.specialityListItem?.id">
+      <app-icon icon="pencil"
+                class="mr-1"
+                width="14"
+                height="14"></app-icon>
+      {{ 'buttons.save' | translate }}
+    </button>
+
+    <a class="btn btn-sm btn-primary"
+       style="display: inline-flex; align-items: center;"
+       (click)="cancel()">
+      <app-icon icon="x"
+                width="20"
+                height="20"></app-icon>
+      {{ 'buttons.cancel' | translate }}
+    </a>
+  </div>
+</div>
+
+<app-part-panel class="mt-3"
+                style="display: block;"
+                [header]="institution.name">
+  <app-university-form [(model)]="model.university"
+                       (isValidForm)="changeFormValidStatus('university', $event)"
+                       [isEditMode]="true"></app-university-form>
+</app-part-panel>
+
+<app-part-panel class="mt-3"
+                style="display: block;"
+                header="{{ 'application.new.employer.label' | translate }}">
+  <app-employer-form [(model)]="model.employer"
+                     (isValidForm)="changeFormValidStatus('employer', $event)"
+                     [isEditMode]="true"
+                     [speciality]="model.university?.specialityListItem?.speciality?.name"></app-employer-form>
+</app-part-panel>
+
+<app-part-panel class="mt-3"
+                style="display: block;"
+                header="{{ 'application.new.student.label' | translate }}">
+  <app-student-form [(model)]="model.student"
+                    (isValidForm)="changeFormValidStatus('student', $event)"
+                    [isEditMode]="true"></app-student-form>
+</app-part-panel>
+
+<app-part-panel class="mt-3"
+                style="display: block;"
+                header="Актуални данни за обучението">
+  <app-actual-education-form [(model)]="model.actualEducation"
+                             (isValidForm)="changeFormValidStatus('actualEducation', $event)"
+                             [educationalQualification]="model.university?.specialityListItem?.educationalQualification"
+                             [isEditMode]="true"></app-actual-education-form>
+</app-part-panel>
+
+<app-part-panel class="mt-3"
+                style="display: block;"
+                header="{{ 'application.new.contract.label' | translate }}">
+  <app-contract-form [(model)]="model.contract"
+                     (isValidForm)="changeFormValidStatus('contract', $event)"
+                     [educationType]="model.actualEducation?.educationType"
+                     [isEditMode]="true"></app-contract-form>
+</app-part-panel>
+
+<div class="d-flex mt-3">
+  <div style="margin-left: auto;">
+    <button class="btn btn-sm btn-primary mr-1"
+            style="display: inline-flex; align-items: center;"
+            (click)="save()"
+            [disabled]="!canSubmit">
+      <app-icon icon="pencil"
+                class="mr-1"
+                width="14"
+                height="14"></app-icon>
+      {{ 'buttons.sendForApproval' | translate }}
+    </button>
+  </div>
+</div>

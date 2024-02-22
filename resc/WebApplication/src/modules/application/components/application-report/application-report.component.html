@@ -1,0 +1,267 @@
+<div class="search-panel mb-5">
+  <div class="row">
+    <div class="form-group col-sm-12 col-md-2">
+      <label> {{ 'list.common.schoolYear' | translate }} </label>
+      <app-async-select #schoolYear="ngModel"
+                        name="schoolYear"
+                        restUrl="SchoolYear/Select"
+                        [(ngModel)]="filter.schoolYear"
+                        (ngModelChange)="filter.schoolYearId = $event.id; filter.schoolYearName = $event.name; onYearChange()">
+      </app-async-select>
+    </div>
+
+    <div class="form-group col-sm-12 col-md-10">
+      <label>Вид справка</label>
+      <select class="custom-select custom-select-sm"
+              #status="ngModel"
+              name="status"
+              (ngModelChange)="onReportTypeChange()"
+              [(ngModel)]="filter.reportType">
+        <option [ngValue]="reportType.defaultReport">
+          Обща бройка обучаеми
+        </option>
+        <option *ngIf="!isUniversityUser"
+                [ngValue]="reportType.reportByInstitution">
+          По висше училище
+        </option>
+        <option [ngValue]="reportType.reportByResearchArea">
+          По професионално направление
+        </option>
+        <option [ngValue]="reportType.reportBySpecialty">
+          По специалност
+        </option>
+        <option [ngValue]="reportType.reportByResearchAreaAndSpecialty">
+          По професионално направление и специалност
+        </option>
+        <option *ngIf="!isUniversityUser"
+                [ngValue]="reportType.reportByResearchAreaAndSpecialityAndInstitution">
+          По професионално направление, специалност и ВУ
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group col-sm-12 col-md-6">
+      <label>{{ 'application.search.speciality' | translate }}</label>
+      <app-async-select #speciality="ngModel"
+                        name="speciality"
+                        restUrl="SpecialityList/Report/Select"
+                        [(ngModel)]="filter.speciality"
+                        [filter]="{schoolYearId: filter.schoolYearId}"
+                        (ngModelChange)="filter.specialityId = $event.speciality.id; filter.specialityName = $event.speciality.name"
+                        [disabled]="filter.reportType != reportType.reportBySpecialty && filter.reportType != reportType.reportByResearchAreaAndSpecialty && filter.reportType != reportType.reportByResearchAreaAndSpecialityAndInstitution">
+      </app-async-select>
+    </div>
+
+    <div class="form-group col-sm-12 col-md-6">
+      <label>{{ 'list.speciality.researchArea' | translate }}</label>
+      <app-async-select #researchArea="ngModel"
+                        name="researchArea"
+                        restUrl="SpecialityList/SelectResearchArea"
+                        [(ngModel)]="filter.researchArea"
+                        [filter]="{entityId: filter.schoolYearId}"
+                        (ngModelChange)="filter.researchAreaId = $event.id; filter.researchAreaName = $event.name"
+                        [disabled]="filter.reportType != reportType.reportByResearchArea && filter.reportType != reportType.reportByResearchAreaAndSpecialty && filter.reportType != reportType.reportByResearchAreaAndSpecialityAndInstitution">
+      </app-async-select>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group col-sm-12 col-md-6">
+      <label>{{ 'list.speciality.institution' | translate }}</label>
+      <app-async-select #institution="ngModel"
+                        name="institution"
+                        restUrl="SpecialityList/SelectUniversity"
+                        [filter]="{entityId: filter.schoolYearId}"
+                        [(ngModel)]="filter.institution"
+                        (ngModelChange)="filter.institutionId = $event.id; filter.institutionName = $event.name"
+                        [disabled]="(filter.reportType != reportType.reportByInstitution && filter.reportType != reportType.reportByResearchAreaAndSpecialityAndInstitution) || isUniversityUser">
+      </app-async-select>
+    </div>
+
+    <div class="form-group col-sm-12 col-md-6">
+      <label class="d-inline-flex">
+        {{ 'application.new.university.educationalQualification' | translate }}
+      </label>
+      <app-async-select #educationalQualification="ngModel"
+                        name="educationalQualification"
+                        restUrl="EducationalQualification/Select"
+                        [(ngModel)]="filter.educationalQualification"
+                        (ngModelChange)="filter.educationalQualificationId = $event.id; filter.educationalQualificationName = $event.name">
+      </app-async-select>
+    </div>
+  </div>
+
+  <div class="row mt-4 mb-2">
+    <div class="col-sm-12">
+      <div class="float-md-left">
+        <div class="btn-group">
+          <button type="button"
+                  class="btn btn-sm btn-secondary d-flex align-items-center"
+                  awaitable
+                  [click]="clearFilter"
+                  [clickContext]="this"
+                  [disabled]="false">
+            <app-icon class="mr-1"
+                      icon="trash"
+                      width="13"
+                      height="13"></app-icon>
+            {{ 'buttons.clear' | translate }}
+          </button>
+        </div>
+      </div>
+
+      <div class="float-md-right d-flex">
+        <div class="dropdown ml-3"
+             style="display: inline-block;">
+          <button class="btn btn-sm btn-outline-primary dropdown-toggle"
+                  type="button"
+                  data-toggle="dropdown">
+            {{ 'buttons.export' | translate }}
+          </button>
+          <div class="dropdown-menu">
+            <app-export restController="Report/Excel"
+                        filename="Reports.xlsx"
+                        [filter]="filter"
+                        [contentType]="contentTypes.EXCEL">
+              <ng-template #exportBtnTemplate>
+                <button type="button"
+                        class="btn btn-sm btn-light dropdown-item d-flex align-items-center">
+                  <app-icon class="mr-1"
+                            icon="file-earmark-spreadsheet"
+                            width="16"
+                            height="16"></app-icon>
+                  {{ 'buttons.excelExport' | translate }}
+                </button>
+              </ng-template>
+            </app-export>
+
+            <app-export restController="Report/Pdf"
+                        filename="Reports.pdf"
+                        [filter]="filter"
+                        [contentType]="contentTypes.PDF">
+              <ng-template #exportBtnTemplate>
+                <button type="button"
+                        class="btn btn-sm btn-light dropdown-item d-flex align-items-center">
+                  <app-icon class="mr-1"
+                            icon="file-earmark-richtext"
+                            width="16"
+                            height="16"></app-icon>
+                  {{ 'buttons.pdfExport' | translate }}
+                </button>
+              </ng-template>
+            </app-export>
+          </div>
+        </div>
+        <button type="button"
+                class="btn btn-sm btn-primary ml-3"
+                awaitable
+                [click]="search"
+                [clickParams]="[false]"
+                [clickContext]="this"
+                [disabled]="false">
+          <app-icon icon="arrow-repeat"
+                    class="thicker-icon"
+                    width="13"
+                    height="13"></app-icon>
+          Генерирай справка
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="form-group col-sm-12"
+       style="font-weight: 600;">
+    СПРАВКА ЗА УЧЕБНАТА {{ schoolYearName }} ГОДИНА
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12">
+    <span style="font-weight: bold;">Вид справка:</span> {{ reportTypeName }}
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12">
+    <span style="font-weight: bold;">Професионално направление:</span> {{ researchAreaName || "Всички" }}
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12">
+    <span style="font-weight: bold;">Специалност:</span> {{ specialityName || "Всички" }}
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12">
+    <span style="font-weight: bold;">Висше училище:</span> {{ institutionName || "Всички" }}
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12">
+    <span style="font-weight: bold;">ОКС:</span> {{ educationalQualificationName || "Всички" }}
+  </div>
+</div>
+<div class="row mb-4">
+  <div class="col-sm-12">
+    <span style="font-weight: bold;">Дата на справката:</span> {{ reportDate | date:'dd.MM.yyyy, HH:mm' }}ч.
+  </div>
+</div>
+
+<table class="table search-table table-bordered">
+  <thead class="
+       thead-light">
+    <tr>
+      <th *ngIf="showResearchArea"
+          scope="col">Направление</th>
+      <th *ngIf="showSpeciality"
+          scope="col">Специалност</th>
+      <th *ngIf="showInstitution"
+          scope="col">Висше училище</th>
+      <th scope="col">По списък</th>
+      <th scope="col">Вписани</th>
+      <th scope="col">Свободни</th>
+      <th scope="col">Изменени</th>
+      <th scope="col">Прекратени</th>
+      <th scope="col">Приключили</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngIf="!report.reports.length">
+      <td colspan="7"
+          style="text-align: center">
+        {{ 'application.table.noResults' | translate }}
+      </td>
+    </tr>
+    <tr *ngFor="let reportItem of report.reports">
+      <td *ngIf="showResearchArea">{{ reportItem.researchArea }}</td>
+      <td *ngIf="showSpeciality">{{ reportItem.speciality }}</td>
+      <td *ngIf="showInstitution">{{ reportItem.institution }}</td>
+      <td style="text-align:right">{{ reportItem.studentsCount}}</td>
+      <td style="text-align:right">{{ reportItem.enteredCommitsCount}}</td>
+      <td style="text-align:right"
+          [ngStyle]="reportItem.studentsCount - reportItem.enteredCommitsCount < 0 ? { 'color': 'red', 'background-color': 'lemonchiffon'} : null">
+        {{
+        reportItem.studentsCount - reportItem.enteredCommitsCount }}</td>
+      <td style="text-align:right">{{ reportItem.changedCommitsCount}}</td>
+      <td style="text-align:right">{{ reportItem.terminatedCommitsCount}}</td>
+      <td style="text-align:right">{{ reportItem.expiredCommitsCount}} </td>
+    </tr>
+    <!-- <tr *ngIf="defaultReport"
+        style="text-align:right">
+      <td>Общо:</td>
+      <td>{{ report.totalCommits}}</td>
+      <td>{{ report.totalEnteredCommits}}</td>
+      <td>{{ report.totalChangedCommits}}</td>
+      <td>{{ report.totalTerminatedCommits}}</td>
+      <td>{{ report.totalExpiredCommits}} </td>
+    </tr> -->
+  </tbody>
+</table>
+
+<div class="float-md-right">
+  <div>
+    <p>Брой записи: {{ report.reports.length }}</p>
+  </div>
+</div>

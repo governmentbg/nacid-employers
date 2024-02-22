@@ -1,0 +1,135 @@
+<div class="search-panel mb-5">
+  <div class="container">
+    <div class="row align-items-baseline">
+      <div class="form-group col-sm-12 col-md-5 d-flex align-items-baseline">
+        <app-async-select #year="ngModel"
+                          name="year"
+                          [isSchoolYearInput]="true"
+                          restUrl="SchoolYearPublic/Select"
+                          [(ngModel)]="schoolYear"
+                          (ngModelChange)="onYearChange($event)"></app-async-select>
+        <label class="ml-3"
+               style="font-weight: 600;"> УЧЕБНА ГОДИНА </label>
+      </div>
+
+      <div class="col-sm-12 col-md-7"
+           style="font-weight: 600;">
+        СПИСЪК НА СПЕЦИАЛНОСТИТЕ С ОСИГУРЕНИ СРЕДСТВА ОТ БЮДЖЕТА
+      </div>
+    </div>
+
+    <div class="row align-items-end">
+      <div class="form-group col-sm-12 col-md-5">
+        <label>Специалност</label>
+        <app-async-select #institution="ngModel"
+                          name="institution"
+                          restUrl="SpecialityPublicList/Select"
+                          [(ngModel)]="filter.speciality"
+                          [placeholder]="'Търсене по специалност'"
+                          [filter]="{schoolYearId: schoolYear.id}"
+                          (ngModelChange)="filter.specialityId = $event?.id; filter.specialityName = $event?.name"
+                          [allowClear]="true">
+        </app-async-select>
+      </div>
+
+      <div class="form-group col-sm-12 col-md-5">
+        <label>Висше училище</label>
+        <app-async-select #institution="ngModel"
+                          name="institution"
+                          restUrl="SpecialityPublicList/selectUniversity"
+                          [(ngModel)]="filter.institution"
+                          [placeholder]="'Търсене по висше училище'"
+                          [filter]="{entityId: schoolYear.id}"
+                          (ngModelChange)="filter.institutionId = $event?.id"
+                          [allowClear]="true"></app-async-select>
+      </div>
+
+      <div class="form-group col-sm-12 col-md-2 padding-zero">
+        <div class="float-right">
+          <button type="button"
+                  class="btn btn-sm ml-2 d-flex search-btn"
+                  awaitable
+                  [click]="searchOverride"
+                  [clickParams]="[false]"
+                  [clickContext]="this"
+                  [disabled]="false">
+            <app-icon icon="search"
+                      class="thicker-icon mr-1"
+                      width="14"
+                      height="14"></app-icon>
+            <div style="font-size: 16px;">ТЪРСЕНЕ</div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div class="row mt-4 mb-2">
+    <div class="col-sm-12">
+      <div class="float-md-left">
+        <div class="btn-group">
+          <button type="button"
+                  class="btn btn-sm btn-secondary d-flex align-items-center"
+                  awaitable
+                  [click]="clearFilter"
+                  [clickContext]="this"
+                  [disabled]="false">
+            <app-icon class="mr-1"
+                      icon="trash"
+                      width="13"
+                      height="13"></app-icon>
+            Изчисти филтъра
+          </button>
+        </div>
+      </div>
+    </div>
+  </div> -->
+</div>
+
+<div id="no-items"
+     *ngIf="noResult"
+     style="text-align: center;">
+  <app-icon icon="search"
+            [width]="'70'"
+            [height]="'70'"
+            class="bi bi-search mb-4"></app-icon>
+  <span *ngIf="afterFirstSearch"
+        style="font-size: 30px;">Няма намерени данни</span>
+  <span *ngIf="!afterFirstSearch"
+        style="font-size: 30px;">Няма публикувани данни</span>
+</div>
+
+<div class="container"
+     style="overflow-x: auto;">
+  <table *ngIf="model.length > 0"
+         class="table search-table table-bordered">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col"
+            style="width: 35%;"> Специалност (брой студенти) </th>
+        <th scope="col"
+            style="width: 20%;"> Направление </th>
+        <th scope="col"
+            style="width: 30%;"> Висше училище </th>
+        <th scope="col"> Предложено от </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let speciality of model, let i = index">
+        <td><span style="font-weight: 600;">
+            {{ speciality.speciality.name }}</span>&nbsp;({{ speciality.studentsCount }})
+          <div>
+            {{ speciality.educationalQualification.name }}, {{ speciality.educationFormType.name }}
+          </div>
+        </td>
+        <td>{{ speciality.researchArea.name }}</td>
+        <td>{{ speciality.institution.name }}</td>
+        <td>
+          <div *ngFor="let specialityMinister of speciality.specialityMinisters">
+            {{ specialityMinister.minister?.name }}
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

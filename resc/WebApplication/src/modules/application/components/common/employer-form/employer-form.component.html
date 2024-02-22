@@ -1,0 +1,95 @@
+<ng-form>
+  <div class="row">
+    <div class="form-group col-sm-12 col-md-5">
+      <label class="d-inline-flex">
+        {{ 'application.new.employer.name' | translate }}
+      </label>
+      <app-async-select #employerListItem="ngModel"
+                        name="employerListItem"
+                        restUrl="EmployerList/Select"
+                        [title]="model.employerListItem?.name || ''"
+                        [ngModel]="model.employerListItem"
+                        [filter]="{speciality: speciality}"
+                        (ngModelChange)="setEmployerItem($event)"
+                        [disabled]="!isEditMode || isApplicationEntered"
+                        [required]="isEditMode"></app-async-select>
+    </div>
+
+    <div class="form-group col-sm-12 col-md-2">
+      <label class="d-inline-flex">
+        {{ 'application.new.employer.bulstat' | translate }}
+      </label>
+      <input type="text"
+             #bulstat="ngModel"
+             name="bulstat"
+             class="form-control form-control-sm"
+             [ngModel]="model.employerListItem?.bulstat"
+             [disabled]="true">
+    </div>
+
+    <div class="form-group col-sm-12 col-md-5">
+      <label class="d-inline-flex">
+        {{ 'application.new.employer.address' | translate }}
+      </label>
+      <input type="text"
+             #address="ngModel"
+             name="address"
+             class="form-control form-control-sm"
+             [ngModel]="model.employerListItem?.fullAddress"
+             [disabled]="true">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group col-sm-12 col-md-7">
+      <label class="d-inline-flex align-items-center">
+        {{ 'application.new.employer.representative' | translate }}
+        <app-help-tooltip class="ml-1"
+                          tooltipText="Лицето, което официално представлява работодателя – напр. управител,  изпълнителен директор и др.">
+        </app-help-tooltip>
+      </label>
+      <input type="text"
+             #representative="ngModel"
+             name="representative"
+             class="form-control form-control-sm"
+             [(ngModel)]="model.representative"
+             [pattern]="cyrillicRegExp"
+             (keypress)="sharedService.onlyCyrillic($event)"
+             [disabled]="!isEditMode"
+             required
+             minlength="3"
+             maxlength="60">
+    </div>
+
+    <div class="form-group col-sm-12 col-md-3">
+      <label class="d-inline-flex">
+        {{ 'application.new.common.email' | translate }}
+      </label>
+      <input type="text"
+             #email="ngModel"
+             name="email"
+             class="form-control form-control-sm"
+             [(ngModel)]="model.email"
+             (keypress)="sharedService.filterMail($event)"
+             [pattern]="mailRegex"
+             [disabled]="!isEditMode"
+             maxlength="40">
+    </div>
+
+    <div class="form-group col-sm-12 col-md-2">
+      <label class="d-inline-flex">
+        {{ 'application.new.common.phoneNumber' | translate }}
+      </label>
+      <input type="text"
+             #phoneNumber="ngModel"
+             name="phoneNumber"
+             class="form-control form-control-sm"
+             [(ngModel)]="model.phoneNumber"
+             (keypress)="sharedService.filterPhone($event, model.phoneNumber)"
+             [disabled]="!isEditMode"
+             [pattern]="phoneRegExp"
+             minlength="9"
+             maxlength="17">
+    </div>
+  </div>
+</ng-form>

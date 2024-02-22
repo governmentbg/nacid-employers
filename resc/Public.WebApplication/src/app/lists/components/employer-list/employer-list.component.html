@@ -1,0 +1,113 @@
+<div class="search-panel mb-5">
+  <div class="container">
+    <div class="row align-items-baseline">
+      <div class="form-group col-sm-12 col-md-5 d-flex align-items-baseline">
+
+        <app-async-select #year="ngModel"
+                          name="year"
+                          [isSchoolYearInput]="true"
+                          restUrl="SchoolYearPublic/Select"
+                          [(ngModel)]="schoolYear"
+                          (ngModelChange)="onYearChange($event)"></app-async-select>
+        <label class="ml-3"
+               style="font-weight: 600;"> УЧЕБНА ГОДИНА </label>
+      </div>
+
+      <div class="col-sm-12 col-md-7"
+           style="font-weight: 600;">
+        СПИСЪК НА РАБОТОДАТЕЛИТЕ ПО ЧЛ. 95А, АЛ. 1 ОТ ЗВО
+      </div>
+    </div>
+
+    <div class="row align-items-end">
+      <div class="form-group col-sm-12 col-md-5">
+        <label> Работодател </label>
+        <app-async-select #companyName="ngModel"
+                          name="companyName"
+                          restUrl="EmployerPublicList/Select"
+                          [(ngModel)]="filter.company"
+                          [placeholder]="'Търсене по работодател'"
+                          [filter]="{entityId: schoolYear.id}"
+                          (ngModelChange)="filter.companyId = $event?.id;"
+                          [allowClear]="true">
+        </app-async-select>
+      </div>
+
+      <div class="form-group col-sm-12 col-md-5">
+        <label> Специалност </label>
+        <app-async-select #speciality="ngModel"
+                          name="speciality"
+                          restUrl="SpecialityPublicList/Select"
+                          [(ngModel)]="filter.speciality"
+                          [placeholder]="'Търсене по специалност'"
+                          [filter]="{schoolYearId: schoolYear.id}"
+                          (ngModelChange)="filter.specialityId = $event?.id; filter.specialityName = $event?.name"
+                          [allowClear]="true">
+        </app-async-select>
+      </div>
+
+      <div class="form-group col-sm-12 col-md-2 padding-zero">
+        <div class="float-right">
+          <button type="button"
+                  class="btn btn-sm ml-3 d-flex search-btn"
+                  awaitable
+                  [click]="searchOverride"
+                  [clickParams]="[false]"
+                  [clickContext]="this"
+                  [disabled]="false">
+            <app-icon icon="search"
+                      class="thicker-icon mr-1"
+                      width="14"
+                      height="14"></app-icon>
+            <div style="font-size: 16px;">ТЪРСЕНЕ</div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="no-items"
+     *ngIf="noResult"
+     style="text-align: center;">
+  <app-icon icon="search"
+            [width]="'70'"
+            [height]="'70'"
+            class="bi bi-search mb-4"></app-icon>
+  <span *ngIf="afterFirstSearch"
+        style="font-size: 30px;">Няма намерени данни</span>
+  <span *ngIf="!afterFirstSearch"
+        style="font-size: 30px;">Няма публикувани данни</span>
+</div>
+
+<div class="container"
+     style="overflow-x: auto;">
+  <table *ngIf="model.length > 0"
+         class="table search-table table-bordered">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col"
+            style="width: 35%;"> Работодател </th>
+        <th scope="col"
+            style="width: 11%;"> Идентификатор </th>
+        <th scope="col"> Специалности (брой студенти)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let employer of model, let i = index">
+        <td style="font-weight: 600;">{{ employer.name }}
+          <div style="font-weight: 400;">
+            {{employer.city.name}}, {{ employer.address }}
+          </div>
+        </td>
+        <td>{{ employer.bulstat }}</td>
+        <td>
+          <div style="display: block;"
+               *ngFor="let speciality of employer.specialities">
+            {{ speciality.speciality?.name }}&nbsp;({{ speciality.studentsCount }})
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

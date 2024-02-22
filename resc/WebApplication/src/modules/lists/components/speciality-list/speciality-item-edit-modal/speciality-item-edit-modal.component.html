@@ -1,0 +1,158 @@
+<div class="search-panel">
+  <ng-form #specialityForm="ngForm"
+           name='specialityForm'>
+    <div class="row">
+      <div class="form-group col-sm-12 col-md-6">
+        <label> {{ 'list.speciality.researchArea' | translate }} </label>
+        <app-async-select #researchArea="ngModel"
+                          name="researchArea"
+                          restUrl="ResearchArea/Select"
+                          [(ngModel)]="model.researchArea"
+                          [required]="true"></app-async-select>
+      </div>
+
+      <div class="form-group col-sm-12 col-md-6">
+        <label> {{ 'list.speciality.institution' | translate }} </label>
+        <app-async-select #institution="ngModel"
+                          name="institution"
+                          restUrl="Institution/University"
+                          [(ngModel)]="model.institution"
+                          (ngModelChange)="onInstitutionChange()"
+                          [filter]="{entityId: model.researchArea?.id}"
+                          [disabled]="!model.researchArea?.id"
+                          [required]="true"></app-async-select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-sm-12 col-md-6">
+        <label> {{ 'list.speciality.qualification' | translate }} </label>
+
+        <app-async-select #educationalQualification="ngModel"
+                          name="educationalQualification"
+                          restUrl="EducationalQualification/Select"
+                          [(ngModel)]="model.educationalQualification"
+                          (ngModelChange)="onQualificationChange()"
+                          [disabled]="!model.institution?.id"
+                          [required]="true"></app-async-select>
+      </div>
+
+      <div class="form-group col-sm-12 col-md-3">
+        <label class="d-inline-flex">
+          {{ 'list.speciality.form' | translate }}
+        </label>
+
+        <app-async-select #educationFormType="ngModel"
+                          name="educationFormType"
+                          restUrl="EducationFormType/Select"
+                          [(ngModel)]="model.educationFormType"
+                          (ngModelChange)="onFormChange()"
+                          [disabled]="!model.educationalQualification?.id"
+                          [required]="true"></app-async-select>
+      </div>
+
+
+    </div>
+
+    <div class="row">
+      <div class="form-group col-sm-12 col-md-10">
+        <label>
+          {{ 'list.common.speciality' | translate }}
+        </label>
+
+        <app-async-select #speciality="ngModel"
+                          name="speciality"
+                          restUrl="Speciality/InstitutionSpecialities"
+                          [(ngModel)]="model.speciality"
+                          (ngModelChange)="onSpecialityChange()"
+                          [filter]="{
+                            entityId: model.institution?.id, 
+                            researchAreaId: model.researchArea?.id, 
+                            educationalQualificationId: model.educationalQualification?.id,
+                            educationFormId: model.educationFormType?.id}"
+                          [disabled]="!model.institution?.id || !model.researchArea?.id || !model.educationalQualification?.id || !model.educationFormType?.id"
+                          [required]="true">
+          <ng-template #dropdownItemTemplate
+                       let-item>
+            {{ item.name }}
+          </ng-template>
+        </app-async-select>
+      </div>
+
+      <div class="form-group col-sm-12 col-md-2">
+        <label class="d-inline-flex">
+          {{ 'list.common.studentsCount' | translate }}
+        </label>
+
+        <input #studentsCount="ngModel"
+               type="number"
+               name="studentsCount"
+               class="form-control form-control-sm"
+               [(ngModel)]="model.studentsCount"
+               [disabled]="!model.speciality?.id"
+               required
+               min="1"
+               max="99">
+      </div>
+    </div>
+
+    <div *ngFor="let minister of model.specialityMinisters; let i = index; trackBy: sharedService.trackByFn"
+         class="row align-items-end">
+      <div class="form-group col-sm-12 col-md-10">
+        <label class="d-inline-flex">
+          {{ 'list.speciality.minister' | translate }}
+        </label>
+
+        <app-async-select #minister="ngModel"
+                          name="minister--{{i}}"
+                          restUrl="Minister/Select"
+                          [(ngModel)]="model.specialityMinisters[i].minister"
+                          [required]="true"
+                          [disabled]="!model.speciality?.id">
+        </app-async-select>
+      </div>
+
+      <div class="form-group col-sm-12 col-md-2">
+        <button *ngIf="model.specialityMinisters.length > 1"
+                type="button"
+                class="btn btn-sm btn-secondary ml-3 float-md-right"
+                (click)="removeMinister(i)">
+          <app-icon icon="trash"></app-icon>
+        </button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12 col-md-3 mb-2">
+        <button type="button"
+                class="btn btn-sm btn-primary"
+                style="display: flex; align-items: center; justify-content: center; width: 100%;"
+                (click)="addMinister()">
+          <app-icon icon="plus-circle"
+                    class="thicker-icon mr-1"></app-icon>
+          Добави министър
+        </button>
+      </div>
+    </div>
+
+    <div class="modal-footer"
+         style="padding-right: 0;">
+      <button type="button"
+              class="btn btn-sm btn-primary mr-3"
+              style="width: 12%;"
+              (click)="editItem()"
+              [disabled]="specialityForm.invalid"
+              awaitable>
+        {{ 'buttons.save' | translate }}
+      </button>
+      <button type="button"
+              class="btn btn-sm btn-outline-dark mr-0"
+              style="width: 12%;"
+              (click)="modal.close()"
+              ngbAutofocus
+              awaitable>
+        {{ 'buttons.cancel' | translate }}
+      </button>
+    </div>
+  </ng-form>
+</div>

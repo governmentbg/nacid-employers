@@ -1,0 +1,216 @@
+<button type="button"
+				class="btn btn-sm btn-primary mb-4 align-items-center"
+				(click)="backClicked()">
+	<app-icon icon="chevron-left"
+						class="thicker-icon d-inline-flex"
+						width="12"
+						height="12"></app-icon>
+	Назад
+</button>
+
+<div class="card">
+	<div class="card-header"
+			 style="display: flex; align-items: center; justify-content: space-between;">
+		{{ 'user.userInfo.titleEdit' | translate}}
+
+		<div style="margin-left:auto">
+			<ng-container *ngIf="!isEditMode">
+				<button *ngIf="model.status == userStatus.active"
+								class="btn btn-sm btn-danger mr-3"
+								(click)="changeUserActiveStatus()">
+					{{ 'user.userInfo.deactivate' | translate}}
+				</button>
+
+				<button *ngIf="model.status == userStatus.deactivated"
+								class="btn btn-sm btn-primary mr-3"
+								(click)="changeUserActiveStatus()">
+					{{ 'user.userInfo.activate' | translate}}
+				</button>
+
+				<button *ngIf="model.status == userStatus.inactive"
+								class="btn btn-sm btn-primary mr-3"
+								(click)="sendActivationLink(model.id)">
+					{{ 'user.userInfo.inactive' | translate}}
+				</button>
+			</ng-container>
+
+			<button *ngIf="!isEditMode"
+							class="btn btn-sm btn-primary"
+							(click)="edit()">
+				{{ 'buttons.edit' | translate}}
+			</button>
+
+			<ng-container *ngIf="isEditMode">
+				<button class="btn btn-sm btn-primary mr-2"
+								(click)="save()"
+								[disabled]="!userEditForm.valid">
+					{{ 'buttons.save' | translate}}
+				</button>
+
+				<button class="btn btn-sm btn-secondary"
+								(click)="cancelEdit()">
+					{{ 'buttons.cancel' | translate}}
+				</button>
+			</ng-container>
+		</div>
+	</div>
+
+	<div class="card-body">
+		<form #userEditForm="ngForm">
+			<fieldset [disabled]="!isEditMode">
+				<div class="row">
+					<div class="form-group col-sm-12 col-md-4">
+						<label class="d-inline-flex">
+							{{ 'user.userInfo.firstname' | translate}}
+							<!-- <app-validation-error-message *ngIf="firstName.invalid"
+																						class="ml-1"
+																						[control]="firstName"
+																						[validationTexts]="validationTexts">
+							</app-validation-error-message> -->
+						</label>
+						<input #firstName="ngModel"
+									 type="text"
+									 name="firstName"
+									 class="form-control form-control-sm"
+									 [(ngModel)]="model.firstName"
+									 required
+									 [pattern]="cyrillicRegExp"
+									 minlength="2"
+									 maxlength="20">
+					</div>
+
+					<div class="form-group col-sm-12 col-md-4">
+						<label class="d-inline-flex">{{ 'user.userInfo.middlename' | translate}}</label>
+						<input type="text"
+									 name="middleName"
+									 class="form-control form-control-sm"
+									 [(ngModel)]="model.middleName"
+									 [pattern]="cyrillicRegExp"
+									 minlength="2"
+									 maxlength="20">
+					</div>
+
+					<div class="form-group col-sm-12 col-md-4">
+						<label class="d-inline-flex">
+							{{ 'user.userInfo.lastName' | translate}}
+							<!-- <app-validation-error-message *ngIf="lastName.invalid"
+																						class="ml-1"
+																						[control]="lastName"
+																						[validationTexts]="validationTexts">
+							</app-validation-error-message> -->
+						</label>
+						<input #lastName="ngModel"
+									 type="text"
+									 name="lastName"
+									 class="form-control form-control-sm"
+									 [(ngModel)]="model.lastName"
+									 required
+									 [pattern]="cyrillicRegExp"
+									 minlength="2"
+									 maxlength="20">
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="form-group col-sm-12 col-md-4">
+						<label class="d-inline-flex">
+							{{ 'user.userInfo.emailUsername' | translate}}
+							<!-- <app-validation-error-message *ngIf="email.invalid"
+																						class="ml-1"
+																						[control]="email"
+																						[validationTexts]="validationTexts">
+							</app-validation-error-message> -->
+						</label>
+						<input #email="ngModel"
+									 type="text"
+									 name="mail"
+									 class="form-control form-control-sm"
+									 [(ngModel)]="model.email"
+									 (keypress)="sharedService.filterMail($event)"
+									 required
+									 pattern="{{emailRegex}}"
+									 maxlength="40">
+					</div>
+
+					<div class="form-group col-sm-12 col-md-4">
+						<label class="d-inline-flex">
+							{{ 'user.repeatable.phone' | translate}}
+							<!-- <app-validation-error-message *ngIf="phone.invalid"
+																																class="ml-1"
+																																[control]="phone"
+																																[validationTexts]="validationTexts">
+																	</app-validation-error-message> -->
+						</label>
+						<input #phone="ngModel"
+									 type="text"
+									 name="phone"
+									 class="form-control form-control-sm"
+									 [(ngModel)]="model.phone"
+									 required
+									 (keypress)="sharedService.filterPhone($event, model.phone)"
+									 minlength="9"
+									 maxlength="14">
+					</div>
+
+					<div class="form-group col-sm-12 col-md-4">
+						<label>{{ 'user.repeatable.role' | translate}}
+							<!-- <app-validation-error-message *ngIf="role.invalid"
+																					class="ml-1"
+																					[control]="role"
+																					[validationTexts]="validationTexts">
+						</app-validation-error-message> -->
+						</label>
+
+						<app-async-select #role="ngModel"
+															name="role"
+															restUrl="Role/Select"
+															(ngModelChange)="selectRole($event)"
+															[(ngModel)]="model.role"
+															[disabled]="!isEditMode"
+															[required]="true"></app-async-select>
+					</div>
+				</div>
+
+				<div class="row"
+						 *ngIf="model.institution != null || model.role.alias == universityUser">
+					<div class="form-group col-sm-12 col-md-8">
+						<label class="d-inline-flex">
+							{{ 'user.userInfo.institutionName' | translate}}
+
+							<!-- <app-validation-error-message *ngIf="institutionType.invalid"
+																										class="ml-1"
+																										[control]="institutionType"
+																										[validationTexts]="validationTexts">
+											</app-validation-error-message> -->
+						</label>
+
+						<app-async-select #institutionType="ngModel"
+															name="institution"
+															restUrl="Institution/University"
+															[(ngModel)]="model.institution"
+															(ngModelChange)="model.institutionId = $event.id"
+															[disabled]="model.institution?.name === 'НАЦИД' || model.institution?.name === 'МОН' || !isEditMode ? true : false"
+															[required]="true"></app-async-select>
+					</div>
+
+					<div class="form-group col-sm-12 col-md-4">
+						<label class="d-inline-flex">
+							{{ 'user.userInfo.position' | translate}}
+							<!-- <app-validation-error-message *ngIf="position.invalid"
+																										class="ml-1"
+																										[control]="position"
+																										[validationTexts]="validationTexts">
+											</app-validation-error-message> -->
+						</label>
+						<input #position="ngModel"
+									 type="text"
+									 name="position"
+									 class="form-control form-control-sm"
+									 [(ngModel)]="model.position"
+									 maxlength="35">
+					</div>
+				</div>
+			</fieldset>
+		</form>
+	</div>
+</div>

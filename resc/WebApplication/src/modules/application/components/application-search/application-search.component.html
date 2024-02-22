@@ -1,0 +1,315 @@
+<div class="search-panel">
+  <div class="row align-items-end">
+    <div class="form-group col-sm-12 col-md-3">
+      <label>{{ 'application.search.registerNumber' | translate }}</label>
+      <input name="registerNumber"
+             class="form-control form-control-sm"
+             [(ngModel)]="filter.registerNumber"
+             maxlength="30">
+    </div>
+
+    <div class="form-group col-sm-12 col-md-3">
+      <label>{{ 'application.search.contractNumber' | translate }}</label>
+      <input name="contractNumber"
+             class="form-control form-control-sm"
+             [(ngModel)]="filter.contractNumber"
+             maxlength="30">
+    </div>
+
+    <div class="form-group col-sm-12 col-md-2">
+      <label class="d-inline-flex align-items-center">
+        {{ 'application.search.signingDateFrom' | translate }}
+      </label>
+      <div class="input-group input-group-sm">
+        <input name="signingDateFrom"
+               class="form-control"
+               ngbDatepicker
+               [ngStyle]="{'border': signingDateFrom.status == 'INVALID' ? '1px solid #dc3545' : null}"
+               #signingDateFrom="ngModel"
+               #datepicker="ngbDatepicker"
+               placeholder="дд/мм/гггг"
+               [(ngModel)]="filter.signingDateFrom"
+               validDate
+               maxlength="10">
+        <div class="input-group-append">
+          <button class="btn btn-sm btn-outline-primary"
+                  (click)="datepicker.toggle()"
+                  type="button">
+            <app-icon icon="calendar2-event"
+                      width="12"
+                      height="12"></app-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group col-sm-12 col-md-2">
+      <label class="d-inline-flex align-items-center">
+        {{ 'application.search.signingDateTo' | translate }}
+      </label>
+      <div class="input-group input-group-sm">
+        <input class="form-control"
+               name="signingDateTo"
+               ngbDatepicker
+               [ngStyle]="{'border': signingDateTo.status == 'INVALID' ? '1px solid #dc3545' : null}"
+               #signingDateTo="ngModel"
+               #birthDatepickerTo="ngbDatepicker"
+               placeholder="дд/мм/гггг"
+               validDate
+               [(ngModel)]="filter.signingDateTo"
+               maxlength="10">
+        <div class="input-group-append">
+          <button class="btn btn-sm btn-outline-primary"
+                  (click)="birthDatepickerTo.toggle()"
+                  type="button">
+            <app-icon icon="calendar2-event"
+                      width="12"
+                      height="12"></app-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group col-sm-12 col-md-2">
+      <button *ngIf="canAddNewApplication"
+              type="button"
+              class="btn btn-sm btn-primary btn-light d-flex align-items-center float-md-right"
+              routerLink="/application/new">
+        <app-icon class="mr-1"
+                  icon="plus-circle"
+                  width="16"
+                  height="16"></app-icon>
+        {{ 'buttons.newApplication' | translate }}
+      </button>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="form-group col-sm-12 col-md-6">
+      <label>{{ 'application.search.institution' | translate }}</label>
+      <ng-container *ngIf="!isUniversityUser">
+        <app-async-select #institution="ngModel"
+                          name="institution"
+                          restUrl="Institution/University"
+                          [(ngModel)]="filter.institution"
+                          (ngModelChange)="filter.institutionId = $event.id"
+                          [enableBorder]="true"
+                          [disabled]="isUniversityUser"></app-async-select>
+      </ng-container>
+      <input *ngIf="isUniversityUser"
+             name="institution"
+             class="form-control form-control-sm"
+             [(ngModel)]="filter.institution"
+             [disabled]="isUniversityUser">
+    </div>
+
+    <div class="form-group col-sm-12 col-md-6">
+      <label>{{ 'application.search.speciality' | translate }}</label>
+      <app-async-select #speciality="ngModel"
+                        name="speciality"
+                        restUrl="Speciality/InstitutionSpecialities"
+                        [(ngModel)]="filter.speciality"
+                        [filter]="{entityId: filter.institutionId}"
+                        (ngModelChange)="filter.specialityId = $event.id"
+                        [enableBorder]="true"
+                        [disabled]="!filter.institutionId"></app-async-select>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group col-sm-12 col-md-6">
+      <label class="d-inline-flex">
+        {{ 'application.search.employerName' | translate }}
+      </label>
+      <app-async-select #tempName="ngModel"
+                        name="tempName"
+                        restUrl="EmployerList/Select"
+                        [(ngModel)]="filter.employerListItem"
+                        [enableBorder]="true"
+                        (ngModelChange)="filter.employerListItemId = $event.id">
+      </app-async-select>
+    </div>
+
+    <div class="form-group col-sm-12 col-md-2">
+      <label class="d-inline-flex">
+        {{ 'application.search.bulstat' | translate }}
+      </label>
+      <input type="text"
+             #bulstat="ngModel"
+             name="bulstat"
+             class="form-control form-control-sm"
+             [(ngModel)]="filter.bulstat"
+             maxlength="10">
+    </div>
+
+    <div class="form-group col-sm-12 col-md-4">
+      <label>{{ 'application.search.enum.status' | translate }}</label>
+      <select class="custom-select custom-select-sm"
+              [(ngModel)]="filter.state">
+        <option selected
+                [ngValue]="null">{{ 'application.search.enum.all' | translate }}</option>
+        <option [ngValue]="commitStates.initialDraft">
+          {{commitStateEnumLocalization[commitStates.initialDraft]}}
+        </option>
+        <option [ngValue]="commitStates.actual">
+          {{commitStateEnumLocalization[commitStates.actual]}}
+        </option>
+        <option [ngValue]="commitStates.deleted">
+          {{commitStateEnumLocalization[commitStates.deleted]}}
+        </option>
+        <option [ngValue]="commitStates.entered">
+          {{commitStateEnumLocalization[commitStates.entered]}}
+        </option>
+        <option [ngValue]="commitStates.enteredModification">
+          {{commitStateEnumLocalization[commitStates.enteredModification]}}
+        </option>
+        <option [ngValue]="commitStates.enteredWithChange">
+          {{commitStateEnumLocalization[commitStates.enteredWithChange]}}
+        </option>
+        <option [ngValue]="commitStates.terminated">
+          {{commitStateEnumLocalization[commitStates.terminated]}}
+        </option>
+        <option [ngValue]="commitStates.expired">
+          {{commitStateEnumLocalization[commitStates.expired]}}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <div class="row align-items-end">
+    <div class="form-group col-sm-12 col-md-6">
+      <label>{{ 'application.search.studentName' | translate }}</label>
+      <input name="studentName"
+             class="form-control form-control-sm"
+             [(ngModel)]="filter.studentName"
+             maxlength="60">
+    </div>
+
+    <div class="form-group col-sm-12 col-md-2">
+      <label class="d-inline-flex">
+        {{ 'application.search.studentUIN' | translate }}
+      </label>
+      <input type="text"
+             #studentUIN="ngModel"
+             name="studentUIN"
+             class="form-control form-control-sm"
+             [(ngModel)]="filter.studentUIN"
+             maxlength="10">
+    </div>
+
+    <div class="form-group col-sm-12 col-md-4">
+      <div class="d-flex justify-content-between">
+        <button type="button"
+                class="btn btn-sm btn-secondary  d-flex align-items-center"
+                awaitable
+                [click]="clearFilter"
+                [clickContext]="this"
+                [disabled]="false">
+          <app-icon class="mr-1"
+                    icon="trash"
+                    width="13"
+                    height="13"></app-icon>
+          {{ 'buttons.clear' | translate }}
+        </button>
+        <button type="button"
+                class="btn btn-sm btn-primary"
+                style="padding-left: 21px;padding-right: 20px;"
+                awaitable
+                [click]="search"
+                [clickParams]="[false]"
+                [clickContext]="this"
+                [disabled]="false">
+          <app-icon icon="search"
+                    class="thicker-icon"
+                    width="12"
+                    height="12"></app-icon>
+          {{ 'buttons.search' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<table class="table search-table table-bordered mt-5">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col"
+          style="width: 10%;">{{ 'application.table.registerNumber' | translate }}</th>
+      <th scope="col"
+          style="width: 10%;">{{ 'application.table.contractNumber' | translate }}</th>
+      <th scope="col"
+          style="width: 25%;">
+        {{ (!isUniversityUser ? 'application.table.institution' : 'application.table.speciality') | translate }}</th>
+      <th scope="col"
+          style="width: 20%;">{{ 'application.table.employer' | translate }}</th>
+      <th scope="col"
+          style="width: 20%;">{{ 'application.table.studentName' | translate }}</th>
+      <th scope="col">{{ 'application.table.status' | translate }}</th>
+      <th scope="col"
+          style="width: 8%">{{ 'application.table.action' | translate }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngIf="!model.length">
+      <td colspan="7"
+          style="text-align: center">
+        {{ 'application.table.noResults' | translate }}
+      </td>
+    </tr>
+    <tr *ngFor="let application of model"
+        [ngClass]="{
+            'yellow': (application.state == commitStates.modification && isUniversityUser) || (application.state ==  commitStates.actual && !isUniversityUser),
+            'green': application.state == commitStates.entered || application.state == commitStates.enteredWithModification ||  application.state == commitStates.enteredWithChange || application.state == commitStates.terminated || application.state == commitStates.expired
+          }">
+      <td>{{ application.registerNumber}}</td>
+      <td><span *ngIf="application.contractNumber != null">№&nbsp;</span>{{ application.contractNumber }}<br
+            *ngIf="application.contractNumber != null"> {{
+        application.signingDate | date: 'dd.MM.yyyy' }} <span
+              *ngIf="application.signingDate && application.endDate">-</span> {{
+        application.endDate | date: 'dd.MM.yyyy' }}</td>
+      <td>
+        <div *ngIf="!isUniversityUser"
+             style="font-weight: 600;">{{ application.institution }}</div> {{ application.speciality }}
+      </td>
+      <td>{{ application.employerName }}<br> {{ application.bulstat }}</td>
+      <td>{{ application.studentName }}<br><a href="mailto:{{ application.studentEmail }}">
+          {{ application.studentEmail}}</a></td>
+      <td
+          [ngStyle]="{'color': application.state == commitStates.deleted || application.state == commitStates.terminated ? 'red' : null }">
+        {{ commitStateEnumLocalization[application.state] }}</td>
+      <td class="preview"
+          style="text-align: center">
+        <a *ngIf="application.state !== 1"
+           class="btn btn-sm btn-outline-primary"
+           [routerLink]="['/application', 'lot', application.lotId, 'commit', application.commitId]">
+          <app-icon icon="search"
+                    width="14"
+                    height="14"></app-icon>
+        </a>
+        <a *ngIf="application.state === 1"
+           class="btn btn-sm btn-outline-primary"
+           [routerLink]="['/application/draft', 'lot', application.lotId, 'commit', application.commitId]">
+          <app-icon icon="search"
+                    width="14"
+                    height="14"></app-icon>
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="d-flex justify-content-between">
+  <div>
+    <button *ngIf="canLoadMore && modelCounts < totalCounts"
+            type="button"
+            class="btn btn-sm btn-secondary"
+            (click)="loadMore()">
+      {{ 'buttons.moreResults' | translate }}
+    </button>
+  </div>
+
+  <div>
+    <p *ngIf="modelCounts > 0">Показани {{ modelCounts }} от общо {{ totalCounts }} записа</p>
+  </div>
+</div>

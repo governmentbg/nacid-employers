@@ -1,0 +1,99 @@
+<ng-form>
+  <div class="row">
+    <div class="form-group col-sm-12 col-md-3">
+      <label class="d-inline-flex">
+        {{ 'application.new.university.educationalQualification' | translate }}
+      </label>
+      <app-async-select #educationalQualification="ngModel"
+                        name="educationalQualification"
+                        [title]="model.educationalQualification?.name || ''"
+                        restUrl="EducationalQualification/Select"
+                        [(ngModel)]="model.educationalQualification"
+                        [disabled]="true"
+                        [required]="isEditMode"></app-async-select>
+    </div>
+
+    <div class="form-group col-sm-12 col-md-3">
+      <label class="d-inline-flex">
+        Вид прием
+      </label>
+      <select class="custom-select custom-select-sm"
+              #educationType="ngModel"
+              name="educationType"
+              [(ngModel)]="model.educationType"
+              [ngStyle]="{'border': model.educationType == null ? '1px solid #dc3545' : null}"
+              [disabled]="!isEditMode || isApplicationEntered"
+              required>
+        <option [ngValue]="studentEducationType.standard">
+          Държавна поръчка
+        </option>
+        <option [ngValue]="studentEducationType.payment">
+          Платено обучение
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group col-sm-12 col-md-2">
+      <label class="d-inline-flex">
+        Текущ статус
+      </label>
+      <select class="custom-select custom-select-sm"
+              #status="ngModel"
+              name="status"
+              [(ngModel)]="model.status"
+              [ngStyle]="{'border': model.status == null ? '1px solid #dc3545' : null}"
+              [disabled]="!isEditMode || isApplicationEntered">
+        <option [ngValue]="studentStatus.current">
+          {{ 'application.new.student.status.current' | translate }}
+        </option>
+        <option [ngValue]="studentStatus.graduated">
+          {{ 'application.new.student.status.graduated' | translate }}
+        </option>
+        <option [ngValue]="studentStatus.interrupted">
+          {{ 'application.new.student.status.interrupted' | translate }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group col-sm-12 col-md-2">
+      <label class="d-inline-flex">
+        Текущ семестър
+      </label>
+      <input type="text"
+             #courseYear="ngModel"
+             name="courseYear"
+             autocomplete="off"
+             class="form-control form-control-sm"
+             [(ngModel)]="model.courseYear"
+             [disabled]="!isEditMode">
+    </div>
+
+    <div class="form-group col-sm-12 col-md-2">
+      <label class="d-inline-flex">
+        Дата на завършване
+      </label>
+      <div class="input-group input-group-sm">
+        <input name="graduationDate"
+               class="form-control"
+               ngbDatepicker
+               [ngStyle]="{'border': graduationDate.status == 'INVALID' ? '1px solid #dc3545' : null}"
+               #graduationDate="ngModel"
+               #datepicker="ngbDatepicker"
+               placeholder="дд/мм/гггг"
+               [(ngModel)]="model.graduationDate"
+               [disabled]="!isEditMode"
+               validDate>
+        <div class="input-group-append">
+          <button class="btn btn-sm btn-outline-primary"
+                  (click)="datepicker.toggle()"
+                  [disabled]="!isEditMode"
+                  type="button">
+            <app-icon icon="calendar2-event"
+                      width="12"
+                      height="12"></app-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-form>

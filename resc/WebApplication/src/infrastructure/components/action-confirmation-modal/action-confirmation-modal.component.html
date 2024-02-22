@@ -1,0 +1,41 @@
+<div class="modal-header">
+	<p>{{ confirmationMessage }}</p>
+</div>
+
+<div class="modal-body"
+		 *ngIf="showTextArea">
+	<form #resultForm="ngForm">
+		<div class="row">
+			<div class="form-group col-sm-12">
+				<label class="d-inline-flex">
+
+					<ng-container *ngIf="confirmationMessage == 'Сигурни ли сте, че искате да върнете записа за редакция?'">
+						Указания за промяна
+					</ng-container>
+					<ng-container *ngIf="confirmationMessage == 'Сигурни ли сте, че искате да изтриете записа?'">
+						Основание за изтриване
+					</ng-container>
+					<ng-container *ngIf="confirmationMessage == 'Сигурни ли сте, че искате да редактирате записа?'">
+						Основание за редакция
+					</ng-container>
+				</label>
+				<textarea name="description"
+									class="form-control form-control-sm"
+									maxlength="600"
+									[(ngModel)]="description"
+									rows="10"></textarea>
+			</div>
+		</div>
+	</form>
+</div>
+
+<div class="modal-footer">
+	<button type="button"
+					class="btn btn-sm btn-primary"
+					(click)="closeModal()">{{ confirmationButton ? confirmationButton : 'buttons.agree' | translate }}</button>
+
+	<button type="button"
+					class="btn btn-sm btn-outline-dark"
+					ngbAutofocus
+					(click)="modal.close(false)">{{ 'buttons.cancel' | translate }}</button>
+</div>

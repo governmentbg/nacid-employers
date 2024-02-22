@@ -1,0 +1,287 @@
+{
+	"loadingIndicator": "Моля, изчакайте...",
+	"help": {
+		"title": "Помощ",
+		"tooltip": "Ръководство за потребители"
+	},
+	"buttons": {
+		"save": "Запиши",
+		"cancel": "Отказ",
+		"agree": "Да, искам",
+		"continue": "Продължи",
+		"startModification": "Промени",
+		"newApplication": "Добави нов",
+		"moreResults": "Покажи още",
+		"search": "Търсене",
+		"clear": "Изчисти филтъра",
+		"exit": "Изход",
+		"changePassword": "Промяна на парола",
+		"send": "Изпрати",
+		"sendForApproval": "Изпрати за вписване",
+		"back": "Назад",
+		"newUser": "Нов потребител",
+		"export": "Експорт",
+		"excelExport": "Excel",
+		"pdfExport": "PDF",
+		"edit": "Редактирай",
+		"cancelModification": "Откажи промените",
+		"tooltips": {
+			"edit": "Редакция на запис",
+			"remove": "Изтриване на запис"
+		},
+		"change": "Смяна",
+		"close": "Затвори"
+	},
+	"common": {
+		"nacid": "НАЦИД",
+		"resc": "Регистър на работодателите",
+		"fileUpload": "Няма избран файл."
+	},
+	"user": {
+		"repeatable": {
+			"username": "Потребителско име",
+			"usernameLong": "Потребителско име (имейл адрес)",
+			"email": "Електронна поща",
+			"phone": "Телефон",
+			"role": "Вид потребител",
+			"password": "Парола",
+			"passwordAgain": "Въведете парола повторно",
+			"actions": "Детайли"
+		},
+		"tableUsers": {
+			"names": "Име",
+			"orgranizationName": "Организация",
+			"activeStatus": "Статус",
+			"noResults": "Няма намерени резултати по зададените критерии.",
+			"email": "Имейл",
+			"contacts": "Телефон и имейл",
+			"actionsTooltip": "Детайли и редакция на запис"
+		},
+		"search": {
+			"status": "Статус",
+			"userStatus": {
+				"active": "Активен",
+				"inactive": "Неактивиран",
+				"deactivated": "Деактивиран",
+				"all": "Всички"
+			}
+		},
+		"userInfo": {
+			"titleCreate": "Създаване на нов потребител",
+			"titleEdit": "Данни на потребител",
+			"firstname": "Първо име",
+			"middlename": "Презиме",
+			"lastname": "Фамилия",
+			"institutionName": "Организация",
+			"position": "Длъжност",
+			"activate": "Активирай потребителя",
+			"deactivate": "Деактивирай потребителя",
+			"emailUsername": "Електронна поща (потребителско име)",
+			"inactive": "Генериране на нов линк",
+			"lastName": "Фамилия"
+		},
+		"changePassword": {
+			"title": "Промяна на парола",
+			"oldPassword": "Стара парола",
+			"newPassword": "Нова парола",
+			"newPasswordAgain": "Въведете новата парола повторно",
+			"changeButton": "Промени"
+		},
+		"activatePassword": {
+			"title": "Активиране на парола",
+			"activateButton": "Активирай"
+		},
+		"forgottenPassword": {
+			"title": "Забравена парола"
+		},
+		"recoveryPassword": {
+			"title": "Смяна на парола"
+		},
+		"login": {
+			"title": "Вход",
+			"loginButton": "Вход",
+			"forgottenPassword": "Забравена парола",
+			"invalidCredentials": "Невалидно потребителско име или парола!"
+		},
+		"unauthorizeInfo": {
+			"ipAddress": "IP адрес:",
+			"date": "Дата:",
+			"hour": "Час:"
+		}
+	},
+	"application": {
+		"lotHistoryTitle": "История на вписванията",
+		"partEditWarning": "Действието не може да се извърши, защото не са запазени промените по следните обстоятелства:",
+		"commitHistory": {
+			"candidateName": "Име на кандидат",
+			"status": "Статус",
+			"createDate": "Дата",
+			"number": "Номер",
+			"actions": "Детайли",
+			"applicantName": "Служител",
+			"changeStateDescription": "Описание"
+		},
+		"new": {
+			"common": {
+				"email": "Ел. поща",
+				"phoneNumber": "Телефон"
+			},
+			"student": {
+				"label": "Студент",
+				"firstName": "Име",
+				"middleName": "Презиме или други имена",
+				"lastName": "Фамилия",
+				"uin": "ЕГН/ЛИН/ЛНЧ/ID",
+				"educationType": {
+					"name": "?????",
+					"payment": "Обучение срещу заплащане",
+					"standard": "Държавна поръчка"
+				},
+				"status": {
+					"name": "Статус",
+					"current": "Действащ",
+					"graduated": "Завършил",
+					"interrupted": "Прекъснал"
+				},
+				"schoolYear": "Курс",
+				"graduationDate": "Дата на завършване"
+			},
+			"university": {
+				"label": "Висше училище",
+				"name": "Наименование",
+				"researchArea": "Професионално направление",
+				"speciality": "Специалност",
+				"educationalQualification": "ОКС",
+				"educationFormType": "Форма на обучение",
+				"rector": "Ректор на ВУ или упълномощено от него лице"
+			},
+			"employer": {
+				"label": "Работодател",
+				"name": "Наименование",
+				"bulstat": "Идентификатор",
+				"address": "Адрес на управление (град, улица, номер)",
+				"representative": "Представител"
+			},
+			"contract": {
+				"label": "Детайли по договор",
+				"speciality": "Специалност",
+				"researchArea": "Професионално направление",
+				"educationalQualification": "ОКС",
+				"signingDate": "Дата на договора",
+				"endDate": "Край на договора",
+				"number": "Номер на договора",
+				"term": "Срок на дог. в месеци",
+				"employmentTerm": "Срок за работа след завършване",
+				"salary": "Възнаграждение",
+				"taxType": {
+					"name": "Размер покрит от бюджета",
+					"full": "Таксата е покрита изцяло",
+					"partially": "Таксата е покрита частично"
+				},
+				"tax": "Семестриална такса",
+				"attachedFile": "Копие на договора",
+				"institutionContactName": "Лице за контакт от висшето училище",
+				"employerContactName": "Лице за контакт на работодателя"
+			}
+		},
+		"table": {
+			"studentName": "Име на студент",
+			"registerNumber": "Рег. номер",
+			"contractNumber": "Дог. номер",
+			"employer": "Работодател",
+			"institution": "Висше училище",
+			"speciality": "Специалност",
+			"action": "Детайли",
+			"status": "Статус",
+			"noResults": "Няма намерени резултати по зададените критерии."
+		},
+		"search": {
+			"studentName": "Име на студент",
+			"registerNumber": "Номер в регистъра",
+			"contractNumber": "Номер на договор",
+			"institution": "Висше училище",
+			"signingDateFrom": "От дата",
+			"signingDateTo": "До дата",
+			"speciality": "Специалност",
+			"employerName": "Работодател",
+			"bulstat": "ЕИК/БУЛСТАТ",
+			"studentUIN": "ЕГН/ЛИН/ЛНЧ/ID",
+			"enum": {
+				"status": "Статус",
+				"all": "Всички"
+			}
+		}
+	},
+	"list": {
+		"common": {
+			"schoolYear": "Учебна година",
+			"speciality": "Специалност",
+			"countShort": "Брой",
+			"studentsCount": "Брой студенти",
+			"addToListBtn": "Добави в списъка",
+			"emptyListMsg": "Няма намерени записи",
+			"stopPublication": "Спри от публикация",
+			"beginPublication": "Публикуване на списъка",
+			"actions": "Действия"
+		},
+		"speciality": {
+			"institution": "Висше училище",
+			"researchArea": "Професионално направление",
+			"researchAreaShort": "Направление",
+			"createYearBtn": "Създай нова година",
+			"qualification": "ОКС",
+			"form": "Форма",
+			"minister": "Министър, който предлага работодатели",
+			"ministerShort": "Предложено от",
+			"specialityItemCount": "Брой специалности в списъка:",
+			"foundSpecialityItemCount": "Брой намерени специалности:"
+		},
+		"employer": {
+			"label": "Работодател",
+			"bulstat": "ЕИК",
+			"city": "Град",
+			"address": "Адрес",
+			"addSpecialityBtn": "+ Добави специалност",
+			"employerItemCount": "Брой работодатели в списъка:"
+		}
+	},
+	"nomenclature": {
+		"title": "Наименование",
+		"isActive": "Активен",
+		"add": "Добави",
+		"description": "Описание",
+		"file": "Файл",
+		"alias": "Псевдоним",
+		"schoolYear": {
+			"fromYear": "От",
+			"toYear": "До"
+		},
+		"cannotDelete": "Стойността се използва и не може да бъде изтрита. За да не се вижда от потребителите може да се деактивира."
+	},
+	"toastr": {
+		"forbidden": "Вие нямате достъп до тази страница",
+		"userEditSuccess": "Данните са записани успешно",
+		"userChangePasswordSuccess": "Вие успешно редактирахте данните",
+		"userPasswordsDoesNotMatch": "Двете пароли се различават",
+		"userInvalidOldPassword": "Невалидна стара парола!",
+		"userChangePasswordNewPasswordMismatch": "Двете пароли се различават",
+		"userEmailTaken": "Имейлът вече е използван",
+		"userActivatePassword": "Успешно активиран профил",
+		"userLinkForActivation": "На потребителя е изпратен нов активационен линк",
+		"userInvalidEmail": "Невалиден адрес на електронната поща!",
+		"userDeactivated": "Несъществуващ или деактивиран потребител",
+		"userChangePassword": "Успешно сменена парола",
+		"userActivationLink": "Успешно е изпратен повторен имейл за активация на потребител",
+		"userActivationTokenAlreadyUsed": "Линкът вече е използван",
+		"userTokenExpired": "Срокът за използване на линкът е изтекъл"
+	},
+	"validations": {
+		"email": "Моля, попълнете валиден адрес на Електронна поща",
+		"password": "Изисква 1 цифра, главна и малка буква"
+	},
+	"searchTable": {
+		"result1": "Показани общо ",
+		"result2": "резултата",
+		"alias": "Псевдоним"
+	}
+}

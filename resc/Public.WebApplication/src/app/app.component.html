@@ -1,0 +1,52 @@
+<app-loading-indicator></app-loading-indicator>
+<header>
+  <div class="container">
+    <div class="row d-flex"
+         style="color: black;">
+      <div class="d-flex align-items-center col-sm-12 col-md-5">
+        <a routerLink=""
+           class="logo-link mt-3"
+           style="padding-left: 0; margin-left: 0;">
+          <img style="width: 4em; height: 5em;"
+               src="./../assets/logo_vec.svg">
+        </a>
+
+        <div class="title mt-3">
+          <h3 style="font-weight: bold; color: #135496; text-transform: uppercase; margin-bottom: 0;">НАЦИД</h3>
+          <h6 style="font-weight: bold; text-transform: uppercase;">Информационна система работодатели и студенти</h6>
+        </div>
+      </div>
+
+      <ul class="main-menu col-sm-12 col-md-7 justify-content-end align-items-end mb-3"
+          style="width: 100%;">
+        <li class="nav-item"
+            style="position: relative;">
+          <a class="d-flex nav-link header-item align-items-center justify-content-center"
+             style="cursor: pointer; font-weight: 700;"
+             [routerLink]="['/specialityList']"
+             routerLinkActive="active-link">
+            СПИСЪК НА СПЕЦИАЛНОСТИТЕ
+          </a>
+        </li>
+
+        <li class="nav-item"
+            style="position: relative;">
+          <a class="d-flex nav-link header-item align-items-center justify-content-center"
+             style="cursor: pointer; font-weight: 700;"
+             [routerLink]="['/employerList']"
+             routerLinkActive="active-link">
+            СПИСЪК НА РАБОТОДАТЕЛИТЕ
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<main>
+  <router-outlet></router-outlet>
+</main>
+
+<div>
+  <ab-footer></ab-footer>
+</div>

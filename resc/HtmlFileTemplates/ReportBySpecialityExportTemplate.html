@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <!-- Use some dev server for development of css and images. They must be hosted! -->
+    <meta charset="UTF-8" />
+  </head>
+
+  <body>
+    <style>
+      * {
+        box-sizing: border-box;
+        font-family: 'Times New Roman';
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        position: relative;
+        padding: 2em;
+      }
+
+      .uppercase {
+        text-transform: uppercase;
+      }
+
+      .bold {
+        font-weight: bold;
+      }
+	  
+	  table {
+		width: 100%;
+		color: #212529;
+		border-collapse: collapse;
+	  }
+	  
+	  table > thead > tr > th,
+	  table > tbody > tr > td {
+		border: 1px solid #000000;
+	  }
+	  
+	  @page {
+		size: landscape;
+	  }
+
+    </style>
+
+    <div>
+      <div style="margin-bottom: 2em;">
+        <h2 class="uppercase">Справка по договори </h2>
+      </div>
+	  
+	  <div class="row">
+  <div class="form-group col-sm-12"
+       style="font-weight: 600;">
+    СПРАВКА ЗА УЧЕБНАТА {{SchoolYearName}} ГОДИНА
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12">
+    <span style="font-weight: bold;">Вид справка:</span> {{ReportTypeName}}
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12">
+    <span style="font-weight: bold;">Професионално направление:</span> {{ResearchAreaName}}
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12">
+    <span style="font-weight: bold;">Специалност:</span> {{SpecialityName}}
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12">
+    <span style="font-weight: bold;">Висше училище:</span> {{InstitutionName}}
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12">
+    <span style="font-weight: bold;">ОКС:</span> {{EducationalQualificationName}}
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm-12">
+    <span style="font-weight: bold;">Дата на справката:</span> {{ReportDate}}ч.
+  </div>
+</div>
+
+      <div>
+        <table>
+          <thead>
+            <tr>
+			  <th style="width: 22%;">Специалност</th>
+              <th style="width: 13%;">По списък</th>
+              <th style="width: 13%;">Вписани</th>
+			  <th style="width: 13%;">Свободни</th>
+              <th style="width: 13%;">Изменени</th>
+              <th style="width: 13%;">Прекратени</th>
+			  <th style="width: 13%;">Приключили</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {{#each Items}}
+            <tr>
+			  <td style="padding-left: 1em;">{{Speciality}}</td>
+              <td style="padding-left: 1em;">{{StudentsCount}}</td>
+              <td style="padding-left: 1em;">{{EnteredCommitsCount}}</td>
+			  <td style="padding-left: 1em;">{{FreeSpotsCounts}}</td>
+              <td style="padding-left: 1em;">{{ChangedCommitsCount}}</td>
+              <td style="padding-left: 1em;">{{TerminatedCommitsCount}}</td>
+			  <td style="padding-left: 1em;">{{ExpiredCommitsCount}}</td>
+            </tr>
+			{{/each}}
+          </tbody>
+        </table>
+      </div>
+  </body>
+
+</html>

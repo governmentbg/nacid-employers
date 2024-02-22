@@ -1,0 +1,302 @@
+<div *ngIf="model.state == commitStates.history 
+|| model.state == commitStates.actualWithModification 
+|| model.state == commitStates.enteredWithModification"
+     style="display: inline-flex; align-items: baseline;">
+  <button type="button"
+          class="btn btn-sm btn-primary mb-4"
+          (click)="backClicked()">
+    <app-icon icon="chevron-left"
+              class="thicker-icon d-inline-flex"
+              width="12"
+              height="12"></app-icon>
+    Назад
+  </button>
+</div>
+
+<div *ngIf="model.state == commitStates.entered 
+|| model.state == commitStates.terminated 
+|| model.state == commitStates.actual 
+|| model.state == commitStates.enteredWithChange 
+|| model.state == commitStates.enteredModification
+|| model.state == commitStates.modification 
+|| model.state == commitStates.deleted"
+     style="display: inline-flex; align-items: baseline;">
+  <button type="button"
+          class="btn btn-sm btn-primary mb-4"
+          (click)="goToSearch()">
+    <app-icon icon="chevron-left"
+              class="thicker-icon d-inline-flex"
+              width="12"
+              height="12"></app-icon>
+    Назад
+  </button>
+</div>
+
+<div class="d-flex mb-1"
+     style="align-items: baseline;">
+  <div style="display: inline-flex; align-items: baseline;"
+       *ngIf="model.state != commitStates.history && model.state != commitStates.actualWithModification && model.state != commitStates.enteredWithModification">
+    <p style="font-weight: bold;">Текущ статус: &nbsp;</p>
+    <h6 style="color: red;">{{ header }}
+    </h6>
+    <ng-container
+                  *ngIf="model.changeStateDescription != null && model.changeStateDescription != '' && model.changeStateDescription != 'undefined' && (model.state == commitStates.deleted || model.state == commitStates.modification || model.state == commitStates.enteredModification)">
+      <p style="width:150px; max-width: fit-content; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+        &nbsp;({{model.changeStateDescription}}</p><span class="d-flex">
+        <app-help-tooltip class="ml-1"
+                          [tooltipText]="model.changeStateDescription">
+        </app-help-tooltip>)
+      </span>
+    </ng-container>
+  </div>
+
+  <div style="margin-left: auto;">
+    <button *ngIf="model.state === commitStates.actual && canEnterApplication"
+            class="btn btn-sm btn-success"
+            (click)="enterApplication()">
+      Впиши в регистъра
+    </button>
+    <button *ngIf="(model.state === commitStates.entered || model.state == commitStates.enteredWithChange) && isUniversityUser"
+            class="btn btn-sm btn-primary ml-3"
+            (click)="changeContract()">
+      Изменение на договора
+    </button>
+    <button *ngIf="(model.state === commitStates.entered || model.state === commitStates.enteredWithChange) && isUniversityUser"
+            class="btn btn-sm btn-danger ml-3"
+            (click)="terminateContract()">
+      Прекратяване на договора
+    </button>
+
+    <button *ngFor="let action of actions"
+            class="btn btn-sm ml-3"
+            [ngClass]="action.style"
+            (click)="action.action()">
+      {{ action.name}}
+    </button>
+
+    <a *ngIf="model.hasOtherCommits && (model.state != commitStates.history && model.state != commitStates.actualWithModification && model.state != commitStates.enteredWithModification)"
+       class="btn btn-sm btn-primary ml-3"
+       style="display: inline-flex; align-items: center;"
+       [routerLink]="['/application', 'lot', model.lotId, 'history']"
+       title="{{ 'application.lotHistoryTitle' | translate }}">
+      История на промените
+    </a>
+  </div>
+</div>
+
+<app-part-panel #universityPart
+                class="mt-2"
+                style="display: block;"
+                [header]="model.universityPart.entity.institution?.name"
+                partName="universityPart"
+                [(model)]="model.universityPart"
+                [commitState]="model.state">
+  <app-university-form [(model)]="model.universityPart.entity"
+                       (isValidForm)="universityPart.hasValidData = $event"
+                       [isApplicationEntered]="model.state == commitStates.enteredModification"
+                       [isEditMode]="universityPart.isEditMode"></app-university-form>
+</app-part-panel>
+
+<app-part-panel #employerPart
+                class="mt-3"
+                style="display: block;"
+                header="{{ 'application.new.employer.label' | translate }}"
+                partName="employerPart"
+                [(model)]="model.employerPart"
+                [commitState]="model.state">
+  <app-employer-form [(model)]="model.employerPart.entity"
+                     (isValidForm)="employerPart.hasValidData = $event"
+                     [isApplicationEntered]="model.state == commitStates.enteredModification"
+                     [isEditMode]="employerPart.isEditMode"></app-employer-form>
+</app-part-panel>
+
+<app-part-panel #studentPart
+                class="mt-3"
+                style="display: block;"
+                header="{{ 'application.new.student.label' | translate }}"
+                partName="studentPart"
+                [(model)]="model.studentPart"
+                [commitState]="model.state">
+  <app-student-form [(model)]="model.studentPart.entity"
+                    (isValidForm)="studentPart.hasValidData = $event"
+                    [isApplicationEntered]="model.state == commitStates.enteredModification"
+                    [isEditMode]="studentPart.isEditMode"></app-student-form>
+</app-part-panel>
+
+<app-part-panel #actualEducationPart
+                class="mt-3"
+                style="display: block;"
+                header="Актуални данни за обучението"
+                partName="actualEducationPart"
+                [(model)]="model.actualEducationPart"
+                [commitState]="model.state">
+  <app-actual-education-form [(model)]="model.actualEducationPart.entity"
+                             (isValidForm)="actualEducationPart.hasValidData = $event"
+                             [isApplicationEntered]="model.state == commitStates.enteredModification"
+                             [educationalQualification]="model.universityPart?.entity?.specialityListItem?.educationalQualification"
+                             [isEditMode]="actualEducationPart.isEditMode"></app-actual-education-form>
+</app-part-panel>
+
+<app-part-panel #contractPart
+                class="mt-3"
+                style="display: block;"
+                header="{{ 'application.new.contract.label' | translate }}"
+                partName="contractPart"
+                [(model)]="model.contractPart"
+                [commitState]="model.state">
+  <app-contract-form [(model)]="model.contractPart.entity"
+                     (isValidForm)="contractPart.hasValidData = $event"
+                     [isApplicationEntered]="model.state == commitStates.enteredModification"
+                     [educationType]="model.actualEducationPart?.entity?.educationType"
+                     [isEditMode]="contractPart.isEditMode"></app-contract-form>
+</app-part-panel>
+
+<div class="d-flex mt-3"
+     *ngIf="model.state === commitStates.modification && isUniversityUser">
+  <div style="margin-left: auto;">
+    <button class="btn btn-sm btn-primary mr-1"
+            style="display: inline-flex; align-items: center;"
+            (click)="finishModification()"
+            [disabled]="!canSubmit">
+      <app-icon icon="pencil"
+                class="mr-1"
+                width="14"
+                height="14"></app-icon>
+      Изпрати отново
+    </button>
+  </div>
+</div>
+
+<ng-container *ngIf="model.applicationModification != null">
+  <div *ngFor="let modification of model.applicationModification; let i = index"
+       class="card mt-3"
+       style="display: block;">
+    <div class="card-header"
+         style="display: flex; align-items: center; justify-content: space-between; font-weight: bold; text-transform: uppercase;">
+      ИЗМЕНЕНИЕ НА ДОГОВОРА
+    </div>
+    <div class="card-body">
+
+      <div class="row">
+        <div class="form-group col-sm-12 col-md-2">
+          <label class="d-inline-flex align-items-center">
+            Дата
+          </label>
+          <div class="input-group input-group-sm">
+            <input name="modificationDate--{{i}}"
+                   class="form-control"
+                   ngbDatepicker
+                   #modificationDate="ngModel"
+                   #end="ngbDatepicker"
+                   placeholder="дд/мм/гггг"
+                   [(ngModel)]="model.applicationModification[i].modificationDate"
+                   validDate
+                   disabled
+                   required>
+            <div class="input-group-append">
+              <button class="btn btn-sm btn-outline-primary"
+                      (click)="end.toggle()"
+                      type="button">
+                <app-icon icon="calendar2-event"
+                          width="12"
+                          height="12"></app-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group col-sm-12 col-md-6">
+          <label class="d-inline-flex">
+            Копие на анекса
+          </label>
+          <app-file-upload #annexFile="ngModel"
+                           name="annexFile--{{i}}"
+                           [(ngModel)]="model.applicationModification[i].annexFile"
+                           disabled="true"
+                           [required]="true"></app-file-upload>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-sm-12 col-md-8">
+          <label class="d-inline-flex">
+            Основание
+          </label>
+          <input type="text"
+                 #reason="ngModel"
+                 name="reason--{{i}}"
+                 class="form-control form-control-sm"
+                 [(ngModel)]="model.applicationModification[i].reason"
+                 disabled="true"
+                 required>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<div *ngIf="model.applicationTermination != null"
+     class="card mt-3"
+     style="display: block;">
+  <div class="card-header"
+       style="display: flex; align-items: center; justify-content: space-between; font-weight: bold; text-transform: uppercase;">
+    ПРЕКРАТЯВАНЕ НА ДОГОВОРА
+  </div>
+  <div class="card-body">
+
+    <div class="row">
+      <div class="form-group col-sm-12 col-md-2">
+        <label class="d-inline-flex align-items-center">
+          Дата
+        </label>
+        <div class="input-group input-group-sm">
+          <input name="terminationDate"
+                 class="form-control"
+                 ngbDatepicker
+                 #terminationDate="ngModel"
+                 #end="ngbDatepicker"
+                 placeholder="дд/мм/гггг"
+                 [(ngModel)]="model.applicationTermination.terminationDate"
+                 validDate
+                 disabled
+                 required>
+          <div class="input-group-append">
+            <button class="btn btn-sm btn-outline-primary"
+                    (click)="end.toggle()"
+                    type="button"
+                    disabled>
+              <app-icon icon="calendar2-event"
+                        width="12"
+                        height="12"></app-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group col-sm-12 col-md-6">
+        <label class="d-inline-flex">
+          Копие на анекса
+        </label>
+        <app-file-upload #annexFile="ngModel"
+                         name="annexFile"
+                         [(ngModel)]="model.applicationTermination.annexFile"
+                         disabled="true"
+                         [required]="true"></app-file-upload>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-sm-12 col-md-8">
+        <label class="d-inline-flex">
+          Основание
+        </label>
+        <input type="text"
+               #reason="ngModel"
+               name="reason"
+               class="form-control form-control-sm"
+               [(ngModel)]="model.applicationTermination.terminationReason.name"
+               disabled="true">
+      </div>
+    </div>
+  </div>
+</div>

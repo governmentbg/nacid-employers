@@ -1,0 +1,135 @@
+<div class="search-panel">
+  <ng-form #employerForm="ngForm"
+           name='employerForm'>
+    <div class="row">
+      <div class="form-group col-sm-12 col-md-2">
+        <label class="d-inline-flex"> {{ 'list.employer.bulstat' | translate }} </label>
+        <input #bulstat="ngModel"
+               type="text"
+               pattern="\d*"
+               name="bulstat"
+               class="form-control form-control-sm"
+               [(ngModel)]="model.bulstat"
+               required
+               minlength="9"
+               maxlength="13">
+      </div>
+
+      <div class="form-group col-sm-12 col-md-10">
+        <label class="d-inline-flex"> {{ 'list.employer.label' | translate }} </label>
+        <input #companyName="ngModel"
+               type="text"
+               name="companyName"
+               class="form-control form-control-sm"
+               [(ngModel)]="model.name"
+               required
+               maxlength="80">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group col-sm-12 col-md-3">
+        <label class="d-inline-flex"> {{ 'list.employer.city' | translate }} </label>
+        <app-async-select #city="ngModel"
+                          name="city"
+                          restUrl="City/Select"
+                          [(ngModel)]="model.city"
+                          [required]="true"></app-async-select>
+      </div>
+
+      <div class="form-group col-sm-12 col-md-9">
+        <label class="d-inline-flex"> {{ 'list.employer.address' | translate }} </label>
+        <input #address="ngModel"
+               type="text"
+               name="address"
+               class="form-control form-control-sm"
+               [(ngModel)]="model.address"
+               required
+               minlength="5"
+               maxlength="100">
+      </div>
+    </div>
+
+    <div class="row"
+         *ngFor="let speciality of model.specialities, let i = index, trackBy:trackByFn">
+      <div class="form-group col-sm-12 col-md-9">
+        <label class="d-inline-flex"> {{ 'list.common.speciality' | translate }} </label>
+
+        <app-async-select #speciality="ngModel"
+                          name="speciality--{{i}}"
+                          restUrl="SpecialityList/Select"
+                          [(ngModel)]="model.specialities[i].speciality"
+                          [filter]="{schoolYearId: this.schoolYearId}"
+                          (ngModelChange)="model.specialities[i].speciality.id = $event.speciality.id"
+                          [required]="true">
+          <ng-template #dropdownItemTemplate
+                       let-item>
+            {{ item.name }}
+          </ng-template>
+        </app-async-select>
+      </div>
+      <div class="form-group col-sm-12"
+           [ngClass]="model.specialities.length > 1 ? 'col-md-2' : 'col-md-3'">
+        <label class="d-inline-flex"> {{ 'list.common.studentsCount' | translate }} </label>
+
+        <input #studentsCount="ngModel"
+               type="number"
+               name="studentsCount--{{i}}"
+               class="form-control form-control-sm"
+               [(ngModel)]="model.specialities[i].studentsCount"
+               required
+               min="1"
+               max="99">
+      </div>
+
+      <div class="form-group col-sm-12 col-md-1">
+        <div class="float-md-right">
+          <label class="d-inline-flex">
+          </label>
+          <button *ngIf="model.specialities.length > 1"
+                  type="button"
+                  class="btn btn-sm btn-secondary"
+                  style="display: flex; align-items: center; justify-content: center"
+                  (click)="removeSpeciality(i)">
+            <app-icon icon="trash"></app-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-2 mb-2">
+      <div class="col-sm-12">
+        <div class="float-md-left d-flex">
+          <div class="btn-group">
+            <button type="button"
+                    class="btn btn-sm btn-primary"
+                    (click)="addSpeciality()"
+                    awaitable>
+              {{ 'list.employer.addSpecialityBtn' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer"
+         style="padding-right: 0;">
+      <button type="button"
+              class="btn btn-sm btn-primary mr-3"
+              style="width: 12%;"
+              (click)="editItem()"
+              [disabled]="employerForm.invalid"
+              awaitable>
+        {{ 'buttons.save' | translate }}
+      </button>
+      <button type="button"
+              class="btn btn-sm btn-outline-dark mr-0"
+              style="width: 12%;"
+              (click)="modal.close()"
+              ngbAutofocus
+              awaitable>
+        {{ 'buttons.cancel' | translate }}
+      </button>
+    </div>
+  </ng-form>
+</div>

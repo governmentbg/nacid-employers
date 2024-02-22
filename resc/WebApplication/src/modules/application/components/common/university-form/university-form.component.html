@@ -1,0 +1,73 @@
+<ng-form>
+  <div class="row">
+    <div class="form-group col-sm-12 col-md-7">
+      <label class="d-inline-flex">
+        {{ 'application.new.university.speciality' | translate }}
+      </label>
+      <app-async-select #speciality="ngModel"
+                        name="speciality"
+                        restUrl="SpecialityList/Select"
+                        [title]="model.specialityListItem?.speciality.name || ''"
+                        [ngModel]="model.specialityListItem?.speciality"
+                        [filter]="{institutionId: model.institution.id}"
+                        (ngModelChange)="setSpecialityItem($event)"
+                        [disabled]="!isEditMode || isApplicationEntered"
+                        [required]="isEditMode"></app-async-select>
+    </div>
+
+    <div class="form-group col-sm-12 col-md-3">
+      <label class="d-inline-flex">
+        {{ 'application.new.university.educationalQualification' | translate }}
+      </label>
+      <input type="text"
+             #educationalQualification="ngModel"
+             name="educationalQualification"
+             class="form-control form-control-sm"
+             [ngModel]="model.specialityListItem?.educationalQualification?.name"
+             [disabled]="true">
+    </div>
+
+    <div class="form-group col-sm-12 col-md-2">
+      <label class="d-inline-flex">
+        {{ 'application.new.university.educationFormType' | translate }}
+      </label>
+      <input type="text"
+             #educationFormType="ngModel"
+             name="educationFormType"
+             class="form-control form-control-sm"
+             [ngModel]="model.specialityListItem?.educationFormType?.name"
+             [disabled]="true">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-group col-sm-12 col-md-7">
+      <label class="d-inline-flex">
+        {{ 'application.new.university.researchArea' | translate }}
+      </label>
+      <input type="text"
+             #researchArea="ngModel"
+             name="researchArea"
+             class="form-control form-control-sm"
+             [ngModel]="model.specialityListItem?.researchArea?.name"
+             [disabled]="true">
+    </div>
+
+    <div class="form-group col-sm-12 col-md-5">
+      <label class="d-inline-flex">
+        {{ 'application.new.university.rector' | translate }}
+      </label>
+      <input type="text"
+             #rector="ngModel"
+             name="rector"
+             class="form-control form-control-sm"
+             [(ngModel)]="model.rector"
+             [pattern]="cyrillicRegExp"
+             (keypress)="sharedService.onlyCyrillic($event)"
+             [disabled]="!isEditMode"
+             [required]="isEditMode"
+             minlength="3"
+             maxlength="40">
+    </div>
+  </div>
+</ng-form>
